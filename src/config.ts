@@ -27,6 +27,10 @@ export interface ToolPins {
   remove: string
   update: string
   move: string
+  completed: string
+  search: string
+  getTask: string
+  batchAdd: string
 }
 
 /** Configuration for the TickTick bridge. */
@@ -71,6 +75,10 @@ export const Config: z<Config> = z.object({
     remove: z.string().default(''),
     update: z.string().default(''),
     move: z.string().default(''),
+    completed: z.string().default(''),
+    search: z.string().default(''),
+    getTask: z.string().default(''),
+    batchAdd: z.string().default(''),
   }).default({
     projects: '',
     tasks: '',
@@ -79,6 +87,10 @@ export const Config: z<Config> = z.object({
     remove: '',
     update: '',
     move: '',
+    completed: '',
+    search: '',
+    getTask: '',
+    batchAdd: '',
   }),
 })
 
@@ -115,6 +127,10 @@ export function resolveConfig(config: Config | undefined): ResolvedConfig {
       remove: pin('remove'),
       update: pin('update'),
       move: pin('move'),
+      completed: pin('completed'),
+      search: pin('search'),
+      getTask: pin('getTask'),
+      batchAdd: pin('batchAdd'),
     }),
   })
 }

@@ -18,8 +18,9 @@
         # toolCallTimeoutMs: 30000
         # Task ids every mutating operation refuses (space/comma separated).
         # protectedTaskIds: []
-        # Raw MCP tool-name pins; each '' = discovered by pattern. The seven
-        # operations are projects/tasks/create/complete/remove/update/move.
+        # Raw MCP tool-name pins; each '' = discovered by pattern. The eleven
+        # operations are projects/tasks/create/complete/remove/update/move/
+        # completed/search/getTask/batchAdd.
         # tools:
         #   projects: list_projects
         #   tasks: get_project_with_undone_tasks
@@ -28,3 +29,7 @@
         #   remove: delete_task
         #   update: update_task
         #   move: move_task
+        #   completed: list_completed_tasks_by_date
+        #   search: search
+        #   getTask: get_task_by_id
+        #   batchAdd: batch_add_tasks

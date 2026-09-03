@@ -154,12 +154,14 @@ export function buildTicktickTools(service: TicktickService): ReturnType<typeof 
           type: 'object',
           properties: {
             task: { oneOf: [TASK_ROW_SCHEMA, { type: 'null' as const }] as const, required: true },
+            verifyWarning: { oneOf: [{ type: 'string' as const }, { type: 'null' as const }] as const, required: true },
           },
           additionalProperties: false,
         },
         render: (_args, value) => {
-          const { task } = value as { task: TicktickTaskWire | null }
-          return [{ type: 'text', text: task === null ? 'task created (server returned no echo)' : `created: ${taskWire(task)}` }]
+          const { task, verifyWarning } = value as { task: TicktickTaskWire | null, verifyWarning: string | null }
+          const line = task === null ? 'task created (server returned no echo)' : `created: ${taskWire(task)}`
+          return [{ type: 'text', text: verifyWarning === null ? line : `${line}; verification warning: ${verifyWarning}` }]
         },
       },
       async execute(args) {
@@ -238,6 +240,96 @@ export function buildTicktickTools(service: TicktickService): ReturnType<typeof 
       },
       async execute(args) {
         return service.reorder(args.id, args.projectId, args.sortOrder)
+      },
+    }),
+    defineTool({
+      name: 'ticktick_completed',
+      description: 'List TickTick tasks completed within a window (default the last 30 days), optionally narrowed to one list.',
+      parameters: {
+        projectId: { type: 'string', description: 'Optional list id (omit for every list)' },
+        days: { type: 'integer', description: 'Window length in days (default 30)' },
+      },
+      output: {
+        schema: {
+          type: 'object',
+          properties: {
+            tasks: { type: 'array', required: true, items: TASK_ROW_SCHEMA },
+            warnings: { type: 'array', required: true, items: { type: 'string' } },
+          },
+          additionalProperties: false,
+        },
+        render: (_args, value) => {
+          const { tasks, warnings } = value as { tasks: readonly TicktickTaskWire[], warnings: readonly string[] }
+          const lines = tasks.length === 0 ? ['no completed tasks in the window'] : tasks.map(taskWire)
+          if (warnings.length > 0) lines.push(...warnings.map(w => `warning: ${w}`))
+          return [{ type: 'text', text: lines.join('\n') }]
+        },
+      },
+      async execute(args) {
+        const result = await service.completed(args.projectId, args.days)
+        return { tasks: [...result.tasks], warnings: [...result.warnings] }
+      },
+    }),
+    defineTool({
+      name: 'ticktick_search',
+      description: 'Full-text search over TickTick tasks (the official search / search_task tool).',
+      parameters: {
+        query: { type: 'string', required: true, description: 'Search keyword' },
+      },
+      output: {
+        schema: {
+          type: 'object',
+          properties: {
+            tasks: { type: 'array', required: true, items: TASK_ROW_SCHEMA },
+            warnings: { type: 'array', required: true, items: { type: 'string' } },
+          },
+          additionalProperties: false,
+        },
+        render: (_args, value) => {
+          const { tasks } = value as { tasks: readonly TicktickTaskWire[], warnings: readonly string[] }
+          const lines = tasks.length === 0 ? ['no matches'] : tasks.map(taskWire)
+          return [{ type: 'text', text: lines.join('\n') }]
+        },
+      },
+      async execute(args) {
+        const result = await service.search(args.query)
+        return { tasks: [...result.tasks], warnings: [...result.warnings] }
+      },
+    }),
+    defineTool({
+      name: 'ticktick_batch_add',
+      description: 'Create several TickTick tasks in one call (batch_add_tasks); rows carry title plus optional list id and ISO due date.',
+      parameters: {
+        tasks: {
+          type: 'array',
+          required: true,
+          description: 'Task rows to create',
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string', required: true },
+              projectId: { type: 'string' },
+              dueDate: { type: 'string' },
+            },
+            additionalProperties: false,
+          },
+        },
+      },
+      output: {
+        schema: {
+          type: 'object',
+          properties: {
+            created: { type: 'integer', required: true },
+          },
+          additionalProperties: false,
+        },
+        render: (_args, value) => {
+          const { created } = value as { created: number }
+          return [{ type: 'text', text: `created ${created} task${created === 1 ? '' : 's'}` }]
+        },
+      },
+      async execute(args) {
+        return service.batchAdd(args.tasks)
       },
     }),
   ]

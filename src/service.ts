@@ -182,6 +182,53 @@ export class TicktickService extends TypertRemoteService {
     return { tasks, warnings }
   }
 
+  /**
+   * Completed tasks within a window (P2): `list_completed_tasks_by_date`
+   * with a startDate `days` back (default 30) and an optional project.
+   */
+  async completed(projectId?: string, days = 30): Promise<TicktickTasksResult> {
+    const { client, resolver } = await this.ensure()
+    if (resolver.completed === '') {
+      throw new RemoteError('ticktick/tool-error', 'the MCP endpoint does not advertise a completed-tasks tool', { tool: 'completed' })
+    }
+    const search: Record<string, unknown> = { startDate: new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10) }
+    if (projectId !== undefined && projectId !== '') search.projectIds = [projectId]
+    const result = await this.call(client, resolver.completed, { search })
+    return { tasks: normalizeTasks(result).map(toWireTask), warnings: [] }
+  }
+
+  /** Full-text search over TickTick tasks (P2): `search` / `search_task`. */
+  async search(query: string): Promise<TicktickTasksResult> {
+    const clean = query.trim()
+    if (clean === '') throw new RemoteError('ticktick/bad-request', 'query required', { field: 'query' })
+    const { client, resolver } = await this.ensure()
+    if (resolver.search === '') {
+      throw new RemoteError('ticktick/tool-error', 'the MCP endpoint does not advertise a search tool', { tool: 'search' })
+    }
+    const result = await this.call(client, resolver.search, { query: clean })
+    return { tasks: normalizeTasks(result).map(toWireTask), warnings: [] }
+  }
+
+  /** Batch-create tasks (P2): `batch_add_tasks` over the OpenTask rows. */
+  async batchAdd(tasks: readonly { title: string, projectId?: string, dueDate?: string }[]): Promise<{ created: number }> {
+    const rows = tasks
+      .map(task => ({ ...task, title: task.title.trim() }))
+      .filter(task => task.title !== '')
+    if (rows.length === 0) throw new RemoteError('ticktick/bad-request', 'at least one non-empty title required', { field: 'tasks' })
+    const { client, resolver } = await this.ensure()
+    if (resolver.batchAdd === '') {
+      throw new RemoteError('ticktick/tool-error', 'the MCP endpoint does not advertise a batch-add tool', { tool: 'batchAdd' })
+    }
+    await this.call(client, resolver.batchAdd, {
+      tasks: rows.map(row => ({
+        title: row.title,
+        ...(row.projectId !== undefined && row.projectId !== '' ? { projectId: row.projectId } : {}),
+        ...(row.dueDate !== undefined && row.dueDate !== '' ? { dueDate: row.dueDate } : {}),
+      })),
+    })
+    return { created: rows.length }
+  }
+
   /** Create one task; a named project places it there, otherwise the Inbox. */
   async add(title: string, projectId?: string, dueDate?: string): Promise<TicktickAddResult> {
     const clean = title.trim()
@@ -192,7 +239,20 @@ export class TicktickService extends TypertRemoteService {
     if (dueDate !== undefined && dueDate !== '') task.dueDate = dueDate
     const result = await this.call(client, resolver.create, { task })
     const created = normalizeTasks(result)[0]
-    return { task: created === undefined ? null : toWireTask(created) }
+    // Read-after-write verification (P2): re-read the task when the
+    // endpoint advertises a by-id lookup and surface a mismatch warning.
+    let verifyWarning: string | null = null
+    if (created !== undefined && resolver.getTask !== '') {
+      try {
+        const readback = await this.call(client, resolver.getTask, { task_id: created.id })
+        const rows = normalizeTasks(readback)
+        if (rows.length === 0) verifyWarning = 'readback returned no task'
+        else if (rows[0]!.title !== clean) verifyWarning = `readback title mismatch: ${rows[0]!.title}`
+      } catch {
+        verifyWarning = 'readback failed (verification skipped)'
+      }
+    }
+    return { task: created === undefined ? null : toWireTask(created), verifyWarning }
   }
 
   /** Mark one task complete (TickTick needs both the project and the task id). */

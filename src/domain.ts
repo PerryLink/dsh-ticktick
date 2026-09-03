@@ -12,7 +12,7 @@
 import type { McpCallResult, McpTool } from './mcp.ts'
 import type { ToolPins } from './config.ts'
 
-/** The resolved raw MCP tool names for the widget operations. */
+/** The resolved raw MCP tool names for the bridge operations. */
 export interface ToolResolver {
   readonly projects: string
   readonly tasks: string
@@ -21,6 +21,14 @@ export interface ToolResolver {
   readonly remove: string
   readonly update: string
   readonly move: string
+  /** `list_completed_tasks_by_date` (P2 completed view). */
+  readonly completed: string
+  /** `search` or `search_task` (P2 full-text search). */
+  readonly search: string
+  /** `get_task_by_id` (P2 read-after-write verification). */
+  readonly getTask: string
+  /** `batch_add_tasks` (P2 batch create). */
+  readonly batchAdd: string
 }
 
 /** Stable task view the widget and tools render. */
@@ -49,9 +57,13 @@ const COMPLETE_PATTERN = /^(complete|finish|done|close|check)[^a-z0-9]*(task|tod
 const REMOVE_PATTERN = /^(delete|remove)[^a-z0-9]*(task|todo)|^(task|todo)[^a-z0-9]*(delete|remove)/i
 const UPDATE_PATTERN = /^update[^a-z0-9]*(task|todo)|^(task|todo)[^a-z0-9]*update/i
 const MOVE_PATTERN = /^move[^a-z0-9]*(task|todo)|^(task|todo)[^a-z0-9]*move/i
+const COMPLETED_PATTERN = /completed[^a-z0-9]*(task|tasks)|completed_by/i
+const SEARCH_PATTERN = /^search(_task)?$/i
+const GET_TASK_PATTERN = /get[^a-z0-9]*task[^a-z0-9]*by[^a-z0-9]*id|^fetch$/i
+const BATCH_ADD_PATTERN = /batch[^a-z0-9]*add[^a-z0-9]*(task|tasks)/i
 
 /**
- * Pick the raw tool names for the seven operations, honoring pins.
+ * Pick the raw tool names for the eleven operations, honoring pins.
  * A pin that is not advertised falls back to pattern discovery, then to
  * the first advertised tool, then to the pin itself (an empty resolver
  * surfaces as a failed call, never a silent no-op).
@@ -66,6 +78,11 @@ export function resolveTools(tools: readonly McpTool[], pins: ToolPins): ToolRes
       ?? (pin !== '' ? pin : tools[0]?.name)
       ?? ''
   }
+  // Prefer the exact `search` tool over `search_task` (both match the pattern).
+  const searchPin = pins.search
+  const exactSearch = tools.find(tool => tool.name === 'search')
+  const search = (searchPin !== '' && tools.some(tool => tool.name === searchPin)) ? searchPin
+    : (exactSearch?.name ?? pick(SEARCH_PATTERN, searchPin))
   return {
     projects: pick(PROJECTS_PATTERN, pins.projects),
     tasks: pick(TASKS_PATTERN, pins.tasks),
@@ -74,6 +91,10 @@ export function resolveTools(tools: readonly McpTool[], pins: ToolPins): ToolRes
     remove: pick(REMOVE_PATTERN, pins.remove),
     update: pick(UPDATE_PATTERN, pins.update),
     move: pick(MOVE_PATTERN, pins.move),
+    completed: pick(COMPLETED_PATTERN, pins.completed),
+    search,
+    getTask: pick(GET_TASK_PATTERN, pins.getTask),
+    batchAdd: pick(BATCH_ADD_PATTERN, pins.batchAdd),
   }
 }
 

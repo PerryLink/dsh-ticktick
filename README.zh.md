@@ -6,8 +6,8 @@
 
 ## 功能
 
-- **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单视图内拖拽排序。
-- **8 个 agent 工具**：`ticktick_status`、`ticktick_lists`、`ticktick_tasks`、`ticktick_add`、`ticktick_complete`、`ticktick_delete`、`ticktick_due`、`ticktick_reorder`；Code Mode 免费获得 `await tools.ticktick_*(args)`。
+- **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。
+- **11 个 agent 工具**：`ticktick_status`、`ticktick_lists`、`ticktick_tasks`、`ticktick_add`、`ticktick_complete`、`ticktick_delete`、`ticktick_due`、`ticktick_reorder`、`ticktick_completed`、`ticktick_search`、`ticktick_batch_add`；Code Mode 免费获得 `await tools.ticktick_*(args)`。
 - **设置卡片**：设置 → 插件 → TickTick：API 口令（secret）、令牌文件、MCP 端点、受保护任务 id。
 - **令牌热重读**：Bearer 令牌每次请求重读（卡片 secret 优先于令牌文件，默认 `$DSH_HOME/.ticktick-token`）；401 会重置客户端，轮换令牌无需重启。
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
@@ -55,6 +55,9 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 | `ticktick_delete` | 删除任务（任务 id + 清单 id） |
 | `ticktick_due` | 设置/清除截止日期（省略日期 = 清除） |
 | `ticktick_reorder` | 赋新整数 sortOrder（清单按 sortOrder 降序排列） |
+| `ticktick_completed` | 时间窗内已完成任务（默认近 30 天），可选单清单 |
+| `ticktick_search` | 任务全文搜索（官方 search 工具） |
+| `ticktick_batch_add` | 一次调用批量创建任务 |
 
 ## 架构
 
@@ -74,8 +77,8 @@ agent 工具 ── ctx.tools（ticktick_*）──▶ 同一服务
 ## 已知限制
 
 - 国际版 TickTick 端点**未实测**：`mcpUrl` 默认国内端点，国际版 MCP URL 尚未探测。
+- 已完成视图、搜索与批量添加走官方 MCP 的 `list_completed_tasks_by_date`、`search`、`batch_add_tasks` 工具；其线上契约来自已发布目录（dida365-sdk 存根），**对真实端点的复验待做**——先用真实令牌跑 `probes/probe-queries.mjs`，再宣称已核验。
 - 实测到的 `update_task` 崩溃与清单校验失败是服务端行为；发布前用 `probes/` 对真实端点复验（导出 `DIDA365_TOKEN` 后运行）。
-- 已完成视图与搜索暂缓：其 MCP 查询工具的线上契约由 `probes/probe-queries.mjs` 先行探测，再实现。
 - 面板使用的 `/api` 面是 harness 标准 Typert 网关；令牌仅存本地（设置文档或令牌文件）且只发给滴答自己的服务器。不要把 `dsh web` 实例暴露到公网。
 
 ## 对真实端点验证

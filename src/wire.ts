@@ -89,9 +89,11 @@ export const TICKTICK_TASKS_RESULT_SCHEMA = z.object({
   warnings: z.array(z.string()),
 })
 
-/** One created task reference. */
+/** One created task reference, plus the P2 read-after-write verification. */
 export interface TicktickAddResult {
   task: TicktickTaskWire | null
+  /** Read-back warning; `null` when the creation verified clean or no lookup tool exists. */
+  verifyWarning: string | null
 }
 
 /** Strict wire schema for {@link TicktickAddResult}. */
@@ -104,6 +106,19 @@ export const TICKTICK_ADD_RESULT_SCHEMA = z.object({
     dueDate: z.string().nullable(),
     sortOrder: z.number().int().nullable(),
   }).nullable(),
+  verifyWarning: z.string().nullable(),
+})
+
+/** One row of the P2 batch-add payload. */
+export const BATCH_ADD_TASK_SCHEMA = z.object({
+  title: z.string(),
+  projectId: z.string().optional(),
+  dueDate: z.string().optional(),
+})
+
+/** Strict wire schema for the `ticktick/batchAdd` result. */
+export const BATCH_ADD_RESULT_SCHEMA = z.object({
+  created: z.number().int(),
 })
 
 /** One accepted mutation. */
@@ -148,11 +163,12 @@ function stringParam(name: string, typeSymbol: string, acceptsUndefined = false)
 }
 
 /** Parameter codec helper: one JSON-sourced number parameter. */
-function numberParam(name: string, typeSymbol: string): InvocationDescriptor['parameters'][number] {
+function numberParam(name: string, typeSymbol: string, acceptsUndefined = false): InvocationDescriptor['parameters'][number] {
   return Object.freeze({
     name,
     wire: name,
     source: 'json' as const,
+    ...(acceptsUndefined ? { acceptsUndefined: true } : {}),
     codec: Object.freeze({
       mode: 'strict' as const,
       typeSymbol,
@@ -288,6 +304,56 @@ export const TICKTICK_REORDER_DESCRIPTOR = Object.freeze({
   sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
 } as const) satisfies InvocationDescriptor
 
+/** The `ticktick/completed` invocation descriptor (P2 completed view). */
+export const TICKTICK_COMPLETED_DESCRIPTOR = Object.freeze({
+  id: 'dsh-ticktick#ticktick/completed',
+  service: 'ticktick',
+  namespace: 'ticktick',
+  method: 'completed',
+  invocation: Object.freeze({ kind: 'direct' }),
+  parameters: Object.freeze([
+    stringParam('projectId', 'dsh-ticktick/types#CompletedProjectId', true),
+    numberParam('days', 'dsh-ticktick/types#CompletedDays', true),
+  ]),
+  result: resultCodec('dsh-ticktick/types#TicktickTasksResult', TICKTICK_TASKS_RESULT_SCHEMA),
+  sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
+} as const) satisfies InvocationDescriptor
+
+/** The `ticktick/search` invocation descriptor (P2 full-text search). */
+export const TICKTICK_SEARCH_DESCRIPTOR = Object.freeze({
+  id: 'dsh-ticktick#ticktick/search',
+  service: 'ticktick',
+  namespace: 'ticktick',
+  method: 'search',
+  invocation: Object.freeze({ kind: 'direct' }),
+  parameters: Object.freeze([
+    stringParam('query', 'dsh-ticktick/types#SearchQuery'),
+  ]),
+  result: resultCodec('dsh-ticktick/types#TicktickTasksResult', TICKTICK_TASKS_RESULT_SCHEMA),
+  sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
+} as const) satisfies InvocationDescriptor
+
+/** The `ticktick/batchAdd` invocation descriptor (P2 batch create). */
+export const TICKTICK_BATCH_ADD_DESCRIPTOR = Object.freeze({
+  id: 'dsh-ticktick#ticktick/batchAdd',
+  service: 'ticktick',
+  namespace: 'ticktick',
+  method: 'batchAdd',
+  invocation: Object.freeze({ kind: 'direct' }),
+  parameters: Object.freeze([Object.freeze({
+    name: 'tasks',
+    wire: 'tasks',
+    source: 'json' as const,
+    codec: Object.freeze({
+      mode: 'strict' as const,
+      typeSymbol: 'dsh-ticktick/types#BatchAddTasks',
+      schema: z.array(BATCH_ADD_TASK_SCHEMA),
+    }),
+  } satisfies InvocationDescriptor['parameters'][number])]),
+  result: resultCodec('dsh-ticktick/types#BatchAddResult', BATCH_ADD_RESULT_SCHEMA),
+  sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
+} as const) satisfies InvocationDescriptor
+
 /**
  * The canonical invocation list both Typert faces register — the host
  * manifest and the client contribution share these exact descriptor objects,
@@ -302,4 +368,7 @@ export const TICKTICK_INVOCATIONS = Object.freeze([
   TICKTICK_REMOVE_DESCRIPTOR,
   TICKTICK_SET_DUE_DESCRIPTOR,
   TICKTICK_REORDER_DESCRIPTOR,
+  TICKTICK_COMPLETED_DESCRIPTOR,
+  TICKTICK_SEARCH_DESCRIPTOR,
+  TICKTICK_BATCH_ADD_DESCRIPTOR,
 ])

@@ -132,6 +132,6 @@ export async function apply(ctx: Context, config: Config | undefined): Promise<v
   ctx.effect(() => ctx.systemPrompt.section({
     name: 'ticktick:usage',
     order: 350,
-    text: 'TickTick (Dida365) tasks are available through the ticktick_* tools: ticktick_status, ticktick_lists, ticktick_tasks, ticktick_add, ticktick_complete, ticktick_delete, ticktick_due, ticktick_reorder. The Session header also shows a TickTick panel for browsing lists, adding, completing, deleting, setting due dates, and drag reordering.',
+    text: 'TickTick (Dida365) tasks are available through the ticktick_* tools: ticktick_status, ticktick_lists, ticktick_tasks, ticktick_add, ticktick_complete, ticktick_delete, ticktick_due, ticktick_reorder, ticktick_completed, ticktick_search, ticktick_batch_add. The Session header also shows a TickTick panel for browsing lists (undone/completed views, full-text search), adding, completing, deleting, setting due dates, and drag reordering.',
   }), 'dsh-ticktick: system prompt section')
 }

@@ -10,6 +10,7 @@ import type { ToolPins } from '../src/config.ts'
 
 const NO_PINS: ToolPins = Object.freeze({
   projects: '', tasks: '', create: '', complete: '', remove: '', update: '', move: '',
+  completed: '', search: '', getTask: '', batchAdd: '',
 })
 
 const TOOLS: readonly McpTool[] = [
@@ -21,10 +22,15 @@ const TOOLS: readonly McpTool[] = [
   { name: 'update_task' },
   { name: 'move_task' },
   { name: 'search' },
+  { name: 'search_task' },
+  { name: 'list_completed_tasks_by_date' },
+  { name: 'get_task_by_id' },
+  { name: 'batch_add_tasks' },
+  { name: 'get_task_in_project' },
 ]
 
 describe('resolveTools', () => {
-  it('resolves the seven operations by pattern', () => {
+  it('resolves the eleven operations by pattern', () => {
     expect(resolveTools(TOOLS, NO_PINS)).toEqual({
       projects: 'list_projects',
       tasks: 'get_project_with_undone_tasks',
@@ -33,6 +39,10 @@ describe('resolveTools', () => {
       remove: 'delete_task',
       update: 'update_task',
       move: 'move_task',
+      completed: 'list_completed_tasks_by_date',
+      search: 'search',
+      getTask: 'get_task_by_id',
+      batchAdd: 'batch_add_tasks',
     })
   })
 

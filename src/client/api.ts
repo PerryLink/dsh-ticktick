@@ -9,7 +9,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
 import type { TicktickAddResult, TicktickStatus, TicktickTasksResult } from '../wire.ts'
-import type { TicktickProjectsResult } from './remote.ts'
+import type { TicktickBatchAddRow, TicktickProjectsResult } from './remote.ts'
 
 /** Widget-facing data contract (injected into the header action). */
 export interface TicktickApi {
@@ -21,6 +21,9 @@ export interface TicktickApi {
   remove(id: string, projectId: string): Promise<void>
   setDue(id: string, projectId: string | undefined, dueDate?: string): Promise<void>
   reorder(id: string, projectId: string | undefined, sortOrder: number): Promise<void>
+  completed(projectId?: string, days?: number): Promise<TicktickTasksResult>
+  search(query: string): Promise<TicktickTasksResult>
+  batchAdd(tasks: readonly TicktickBatchAddRow[]): Promise<{ created: number }>
 }
 
 /**
@@ -44,5 +47,8 @@ export function createTicktickApi(scope: Context): TicktickApi {
     remove: async (id, projectId) => { unwrap(await scope.remote.ticktick.remove(id, projectId), 'remove') },
     setDue: async (id, projectId, dueDate) => { unwrap(await scope.remote.ticktick.setDue(id, projectId, dueDate), 'setDue') },
     reorder: async (id, projectId, sortOrder) => { unwrap(await scope.remote.ticktick.reorder(id, projectId, sortOrder), 'reorder') },
+    completed: async (projectId, days) => unwrap(await scope.remote.ticktick.completed(projectId, days), 'completed'),
+    search: async (query) => unwrap(await scope.remote.ticktick.search(query), 'search'),
+    batchAdd: async (tasks) => unwrap(await scope.remote.ticktick.batchAdd([...tasks]), 'batchAdd'),
   }
 }

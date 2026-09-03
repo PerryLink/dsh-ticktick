@@ -13,6 +13,7 @@ import type { McpCallResult, McpClientFace, McpTool } from '../src/mcp.ts'
 const PINS: ToolPins = Object.freeze({
   projects: 'list_projects', tasks: 'get_project_with_undone_tasks', create: 'create_task',
   complete: 'complete_task', remove: 'delete_task', update: 'update_task', move: 'move_task',
+  completed: 'list_completed_tasks_by_date', search: 'search', getTask: 'get_task_by_id', batchAdd: 'batch_add_tasks',
 })
 
 const TOOLS: readonly McpTool[] = Object.values(PINS).map(name => ({ name }))
@@ -47,6 +48,18 @@ class FakeClient implements McpClientFace {
         const key = String(args.project_id)
         return this.tasksByProject.get(key) ?? { content: [{ type: 'text', text: JSON.stringify([]) }] }
       }
+      case 'list_completed_tasks_by_date':
+        return { content: [{ type: 'text', text: JSON.stringify([
+          { id: 't-done', title: 'done task', status: 2, projectId: 'hex1', completedTime: '2026-09-01T10:00:00+08:00' },
+        ]) }] }
+      case 'search':
+        return { content: [{ type: 'text', text: JSON.stringify([
+          { taskId: 't-search', title: 'found task', status: 0, projectId: 'hex1' },
+        ]) }] }
+      case 'get_task_by_id':
+        return { content: [{ type: 'text', text: JSON.stringify({
+          id: String(args.task_id), title: 'buy milk', status: 0, projectId: 'inbox1020518753',
+        }) }] }
       case 'create_task': {
         const task = args.task as Record<string, unknown>
         return {
@@ -126,7 +139,7 @@ describe('TicktickService', () => {
     const { service } = makeService(fake)
     const result = await service.add('  buy milk  ')
     expect(result.task).toMatchObject({ id: 't-new', title: 'buy milk', projectId: 'inbox1020518753' })
-    expect(fake.calls.at(-1)).toEqual({ name: 'create_task', args: { task: { title: 'buy milk' } } })
+    expect(fake.calls.find(call => call.name === 'create_task')).toEqual({ name: 'create_task', args: { task: { title: 'buy milk' } } })
   })
 
   it('rejects an empty title', async () => {
@@ -197,6 +210,62 @@ describe('TicktickService', () => {
     const { service } = makeService(fake)
     await expect(service.setDue('t1', 'hex1', '2026-09-05')).rejects.toMatchObject({ code: 'ticktick/tool-error' })
     expect(fake.calls.map(call => call.name)).toEqual(['update_task'])
+  })
+
+  it('lists completed tasks within the window', async () => {
+    const fake = new FakeClient()
+    const { service } = makeService(fake)
+    const result = await service.completed('hex1', 30)
+    expect(result.tasks).toEqual([{
+      id: 't-done', title: 'done task', done: true, projectId: 'hex1', dueDate: null, sortOrder: null,
+    }])
+    const args = fake.calls.find(call => call.name === 'list_completed_tasks_by_date')?.args as { search: Record<string, unknown> }
+    expect(args.search.projectIds).toEqual(['hex1'])
+    expect(args.search.startDate).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+
+  it('searches tasks by keyword', async () => {
+    const fake = new FakeClient()
+    const { service } = makeService(fake)
+    const result = await service.search('  found  ')
+    expect(result.tasks).toEqual([{ id: 't-search', title: 'found task', done: false, projectId: 'hex1', dueDate: null, sortOrder: null }])
+    expect(fake.calls.at(-1)?.args).toEqual({ query: 'found' })
+  })
+
+  it('batch-creates tasks and trims empty rows', async () => {
+    const fake = new FakeClient()
+    const { service } = makeService(fake)
+    const result = await service.batchAdd([
+      { title: '  a  ' },
+      { title: '   ' },
+      { title: 'b', projectId: 'hex1', dueDate: '2026-09-05' },
+    ])
+    expect(result).toEqual({ created: 2 })
+    const args = fake.calls.find(call => call.name === 'batch_add_tasks')?.args as { tasks: unknown[] }
+    expect(args.tasks).toEqual([{ title: 'a' }, { title: 'b', projectId: 'hex1', dueDate: '2026-09-05' }])
+  })
+
+  it('verifies creations by readback when a lookup tool exists', async () => {
+    const fake = new FakeClient()
+    fake.tasksByProject.set('inbox1020518753', { content: [] })
+    const { service } = makeService(fake)
+    const result = await service.add('buy milk')
+    expect(result.verifyWarning).toBeNull()
+    expect(fake.calls.some(call => call.name === 'get_task_by_id')).toBe(true)
+  })
+
+  it('surfaces a readback mismatch warning', async () => {
+    const fake = new FakeClient()
+    const original = fake.callTool.bind(fake)
+    fake.callTool = async (name, args) => {
+      if (name === 'get_task_by_id') {
+        return { content: [{ type: 'text', text: JSON.stringify({ id: String(args.task_id), title: 'other title', status: 0 }) }] }
+      }
+      return original(name, args)
+    }
+    const { service } = makeService(fake)
+    const result = await service.add('buy milk')
+    expect(result.verifyWarning).toMatch(/mismatch: other title/)
   })
 
   it('reorders inbox tasks via update and project tasks via same-project move', async () => {

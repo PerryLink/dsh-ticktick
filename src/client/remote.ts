@@ -22,6 +22,18 @@ export interface TicktickProjectsResult {
   projects: readonly { id: string, name: string }[]
 }
 
+/** Result of `ticktick/batchAdd`. */
+export interface TicktickBatchAddResult {
+  created: number
+}
+
+/** One batch-add row. */
+export interface TicktickBatchAddRow {
+  title: string
+  projectId?: string
+  dueDate?: string
+}
+
 declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteNamespace$ticktick {
     status: () => Promise<RemoteResult<TicktickStatus>>
@@ -32,6 +44,9 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     remove: (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
     setDue: (id: string, projectId: string | undefined, dueDate?: string) => Promise<RemoteResult<TicktickOkResult>>
     reorder: (id: string, projectId: string | undefined, sortOrder: number) => Promise<RemoteResult<TicktickOkResult>>
+    completed: (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>
+    search: (query: string) => Promise<RemoteResult<TicktickTasksResult>>
+    batchAdd: (tasks: TicktickBatchAddRow[]) => Promise<RemoteResult<TicktickBatchAddResult>>
   }
   interface TypertRemoteMap {
     'ticktick/status': () => Promise<RemoteResult<TicktickStatus>>
@@ -42,6 +57,9 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     'ticktick/remove': (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
     'ticktick/setDue': (id: string, projectId: string | undefined, dueDate?: string) => Promise<RemoteResult<TicktickOkResult>>
     'ticktick/reorder': (id: string, projectId: string | undefined, sortOrder: number) => Promise<RemoteResult<TicktickOkResult>>
+    'ticktick/completed': (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>
+    'ticktick/search': (query: string) => Promise<RemoteResult<TicktickTasksResult>>
+    'ticktick/batchAdd': (tasks: TicktickBatchAddRow[]) => Promise<RemoteResult<TicktickBatchAddResult>>
   }
   interface TypertRemoteNamespaceMap {
     ticktick: TypertRemoteNamespace$ticktick

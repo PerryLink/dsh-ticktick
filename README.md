@@ -6,8 +6,8 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 ## Features
 
-- **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (single-list views).
-- **Eight agent tools** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`; Code Mode gets `await tools.ticktick_*(args)` for free.
+- **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views).
+- **Eleven agent tools** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; Code Mode gets `await tools.ticktick_*(args)` for free.
 - **Settings card** — Settings → Plugins → TickTick: API token (secret), token file, MCP endpoint, protected task ids.
 - **Live token re-read** — the Bearer token is re-read per request (card secret > token file, default `$DSH_HOME/.ticktick-token`); a 401 resets the client so a rotated token activates without restart.
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
@@ -55,6 +55,9 @@ Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action ap
 | `ticktick_delete` | delete a task (task id + list id) |
 | `ticktick_due` | set/clear a due date (omit the date to clear) |
 | `ticktick_reorder` | assign a new integer sortOrder (lists order by descending sortOrder) |
+| `ticktick_completed` | tasks completed within a window (default 30 days), optionally one list |
+| `ticktick_search` | full-text search over tasks (the official search tool) |
+| `ticktick_batch_add` | create several tasks in one call |
 
 ## Architecture
 
@@ -74,8 +77,8 @@ agent tools ─── ctx.tools (ticktick_*) ──▶ the same service
 ## Known limitations
 
 - The international TickTick endpoint is **unverified**: `mcpUrl` defaults to the CN endpoint, and the international MCP URL has not been probed.
+- The completed view, search, and batch add ride the MCP tools `list_completed_tasks_by_date`, `search`, and `batch_add_tasks`; their wire contracts come from the published catalogue (`dida365-sdk` stubs) and **re-verification against the live endpoint is pending** — run `probes/probe-queries.mjs` with a real token before claiming them verified.
 - The measured `update_task` crash and the list-validation failure are server-side behaviors; `probes/` re-verifies them against the live endpoint before a release (run with `DIDA365_TOKEN` exported).
-- Completed-task views and search are deferred: their MCP query-tool wire contracts are discovered by `probes/probe-queries.mjs` before implementation.
 - The `/api` surface the panel uses is the standard harness Typert gateway; the token is stored locally (settings document or token file) and sent only to TickTick's own servers. Do not expose a `dsh web` instance to the public internet.
 
 ## Verify the bridge against the live endpoint
