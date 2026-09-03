@@ -1,0 +1,30 @@
+# dsh-ticktick bundle patch: mount the TickTick task bridge. `name` is the
+# package name, resolved through the profile's node_modules. An id-targeted
+# override replaces the whole config row — restate every key when overriding.
+# The Bearer token (the TickTick API 口令, dp_ prefix) is read from the
+# settings card or from $DSH_HOME/.ticktick-token at request time; writing
+# the file activates the bridge without a config change.
+- insert:
+    - id: ticktick
+      name: dsh-ticktick
+      config:
+        # Path to a text file holding the Bearer token. Empty (default)
+        # resolves to <DSH_HOME>/.ticktick-token at request time.
+        # tokenFile: ''
+        # TickTick MCP endpoint (CN default; the international endpoint is
+        # unverified — see README).
+        # mcpUrl: 'https://mcp.dida365.com'
+        # Per tools/call deadline in milliseconds.
+        # toolCallTimeoutMs: 30000
+        # Task ids every mutating operation refuses (space/comma separated).
+        # protectedTaskIds: []
+        # Raw MCP tool-name pins; each '' = discovered by pattern. The seven
+        # operations are projects/tasks/create/complete/remove/update/move.
+        # tools:
+        #   projects: list_projects
+        #   tasks: get_project_with_undone_tasks
+        #   create: create_task
+        #   complete: complete_task
+        #   remove: delete_task
+        #   update: update_task
+        #   move: move_task

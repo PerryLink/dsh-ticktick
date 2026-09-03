@@ -1,0 +1,148 @@
+{
+  "name": "dsh-ticktick",
+  "version": "0.1.0",
+  "description": "TickTick (Dida365) task bridge for DeepSeek Harness: a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder) over the official TickTick MCP endpoint, a Ticktick Remote service, curated agent tools, and a plugin settings card.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-ticktick.git"
+  },
+  "homepage": "https://github.com/PerryLink/dsh-ticktick#readme",
+  "bugs": {
+    "url": "https://github.com/PerryLink/dsh-ticktick/issues"
+  },
+  "author": "PerryLink",
+  "private": false,
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./typert": {
+      "types": "./lib/types/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "probes",
+    "cordis.patch.yml",
+    "CHANGELOG.md",
+    "README.md",
+    "README.zh.md",
+    "README.es.md",
+    "README.pt.md",
+    "README.hi.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek",
+    "cordis",
+    "ticktick",
+    "dida365",
+    "todo",
+    "task",
+    "mcp",
+    "widget"
+  ],
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.8 <0.2.0",
+    "@deepseek-ai/dsh-typert-protocol": ">=0.1.0-rc.8 <0.2.0",
+    "@deepseek-ai/dsh-settings": ">=0.1.0-rc.8 <0.2.0",
+    "@deepseek-ai/dsh-system-prompt": ">=0.1.0-rc.8 <0.2.0",
+    "@deepseek-ai/schemastery": "^3.18.0",
+    "@deepseek-ai/dsh-api-remotes": ">=0.1.1-rc.2 <0.2.0",
+    "@deepseek-ai/dsh-client-locale": ">=0.1.1-rc.2 <0.2.0",
+    "@deepseek-ai/dsh-client-ui-conversation": ">=0.1.1-rc.2 <0.2.0",
+    "@deepseek-ai/dsh-client-ui-primitives": ">=0.1.1-rc.2 <0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-api-remotes": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-locale": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-conversation": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-primitives": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "tsdown": "^0.22.14",
+    "typescript": "^5.9.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-api-remotes": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-locale": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-ui-settings-plugins": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-settings": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-system-prompt": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-tools": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.2-alpha.5",
+    "@deepseek-ai/schemastery": "^3.18.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.19.0",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "jsdom": "^30.0.1",
+    "oxlint": "0.18.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "vitest": "^4.1.10"
+  },
+  "scripts": {
+    "build": "node scripts/prepare.mjs",
+    "typecheck": "tsc --noEmit",
+    "typecheck:ci": "tsc -p tsconfig.ci.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "oxlint",
+    "prepare": "node scripts/prepare.mjs",
+    "verify:self-contained": "node scripts/verify-self-contained.mjs",
+    "verify:artifacts": "node scripts/verify-artifacts.mjs"
+  },
+  "license": "Apache-2.0",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/PerryLink"
+  }
+}

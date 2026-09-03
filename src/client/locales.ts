@@ -1,0 +1,75 @@
+/**
+ * Locale dictionaries for the TickTick panel and settings card. The harness
+ * locale registry accepts the 'en' | 'zh' UI language codes, so this client
+ * ships those two dictionaries and follows the app's UI language.
+ *
+ * @module dsh-ticktick/client/locales
+ */
+
+export type TicktickLocaleKey = keyof typeof en
+
+export const en = {
+  title: 'TickTick',
+  open: 'Open TickTick tasks',
+  allLists: 'All lists',
+  refresh: 'Refresh',
+  addPlaceholder: 'Add a task…',
+  add: 'Add',
+  empty: 'No tasks',
+  confirmDelete: 'Delete this task?',
+  delete: 'Delete',
+  complete: 'Complete',
+  setDue: 'Set due date',
+  clearDue: 'Clear due date',
+  overdue: 'overdue',
+  today: 'today',
+  tomorrow: 'tomorrow',
+  warning: 'Warning',
+  unconfigured: 'No TickTick token: set it in Settings → Plugins → TickTick.',
+  loadError: 'Failed to load: ',
+  settingsName: 'TickTick',
+  settingsToken: 'API token (dp_…)',
+  settingsTokenHint: 'A secret saved locally; wins over the token file.',
+  settingsTokenFile: 'Token file path',
+  settingsTokenFileHint: 'Empty = $DSH_HOME/.ticktick-token, re-read per request.',
+  settingsMcpUrl: 'MCP endpoint',
+  settingsMcpUrlHint: 'Restart dsh after changing the endpoint.',
+  settingsProtected: 'Protected task ids',
+  settingsProtectedHint: 'Comma-separated; mutating operations refuse these (restart applies).',
+  settingsSave: 'Save',
+  settingsSaved: 'Saved',
+} as const
+
+export type TicktickLocale = Record<TicktickLocaleKey, string>
+
+export const zh: TicktickLocale = {
+  title: '滴答清单',
+  open: '打开滴答任务',
+  allLists: '全部清单',
+  refresh: '刷新',
+  addPlaceholder: '添加任务…',
+  add: '添加',
+  empty: '暂无任务',
+  confirmDelete: '删除这个任务？',
+  delete: '删除',
+  complete: '完成',
+  setDue: '设置截止日期',
+  clearDue: '清除截止日期',
+  overdue: '已过期',
+  today: '今天',
+  tomorrow: '明天',
+  warning: '警告',
+  unconfigured: '未配置滴答令牌：请在 设置 → 插件 → TickTick 中设置。',
+  loadError: '加载失败：',
+  settingsName: 'TickTick',
+  settingsToken: 'API 口令（dp_ 开头）',
+  settingsTokenHint: '仅保存在本地，优先于令牌文件。',
+  settingsTokenFile: '令牌文件路径',
+  settingsTokenFileHint: '留空 = $DSH_HOME/.ticktick-token，每次请求重读。',
+  settingsMcpUrl: 'MCP 端点',
+  settingsMcpUrlHint: '修改端点后需重启 dsh。',
+  settingsProtected: '受保护任务 id',
+  settingsProtectedHint: '逗号分隔；变更操作拒绝这些任务（重启生效）。',
+  settingsSave: '保存',
+  settingsSaved: '已保存',
+} as const
