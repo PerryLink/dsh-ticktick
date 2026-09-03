@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2026-09-03
 
 ### Added
 
@@ -14,7 +14,3 @@ All notable changes to this project are documented in this file. The format is b
 - Protected task ids refuse every mutating operation before any wire call.
 - Zero-dependency live-endpoint probes (`probes/`) for handshake, CRUD, due-date detour, reorder semantics, and query-tool contract discovery.
 - Unit specs: domain normalization, MCP client, service workarounds, drag math, due-date presentation.
-
-## [0.1.0] - unreleased
-
-Initial release candidate.
