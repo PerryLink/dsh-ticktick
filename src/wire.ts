@@ -121,6 +121,20 @@ export const BATCH_ADD_RESULT_SCHEMA = z.object({
   created: z.number().int(),
 })
 
+/** One-shot connectivity probe result (settings card test button). */
+export interface TicktickProbeResult {
+  ok: boolean
+  toolCount: number
+  error: string | null
+}
+
+/** Strict wire schema for {@link TicktickProbeResult}. */
+export const TICKTICK_PROBE_RESULT_SCHEMA = z.object({
+  ok: z.boolean(),
+  toolCount: z.number().int(),
+  error: z.string().nullable(),
+})
+
 /** One accepted mutation. */
 export interface TicktickOkResult {
   ok: boolean
@@ -354,6 +368,18 @@ export const TICKTICK_BATCH_ADD_DESCRIPTOR = Object.freeze({
   sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
 } as const) satisfies InvocationDescriptor
 
+/** The `ticktick/probe` invocation descriptor (settings-card connectivity test). */
+export const TICKTICK_PROBE_DESCRIPTOR = Object.freeze({
+  id: 'dsh-ticktick#ticktick/probe',
+  service: 'ticktick',
+  namespace: 'ticktick',
+  method: 'probe',
+  invocation: Object.freeze({ kind: 'direct' }),
+  parameters: Object.freeze([]),
+  result: resultCodec('dsh-ticktick/types#TicktickProbeResult', TICKTICK_PROBE_RESULT_SCHEMA),
+  sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
+} as const) satisfies InvocationDescriptor
+
 /**
  * The canonical invocation list both Typert faces register — the host
  * manifest and the client contribution share these exact descriptor objects,
@@ -371,4 +397,5 @@ export const TICKTICK_INVOCATIONS = Object.freeze([
   TICKTICK_COMPLETED_DESCRIPTOR,
   TICKTICK_SEARCH_DESCRIPTOR,
   TICKTICK_BATCH_ADD_DESCRIPTOR,
+  TICKTICK_PROBE_DESCRIPTOR,
 ])

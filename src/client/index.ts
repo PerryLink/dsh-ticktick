@@ -103,7 +103,14 @@ export async function apply(ctx: ClientContext): Promise<void> {
       name: 'settings.plugin.item',
       key: 'ticktick',
       locale: NS,
-      inject: (): TicktickSettingsCardInjected => ({ scope: settingsScope }),
+      inject: (): TicktickSettingsCardInjected => ({
+        scope: settingsScope,
+        probe: async () => {
+          const result = await scope.remote.ticktick.probe()
+          if (!result.ok) throw new Error(`ticktick.probe failed: ${result.error.code}: ${result.error.message}`)
+          return result.value
+        },
+      }),
     }, TicktickSettingsCard))
   })
 }

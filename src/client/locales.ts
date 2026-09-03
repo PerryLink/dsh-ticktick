@@ -42,6 +42,11 @@ export const en = {
   settingsProtectedHint: 'Comma-separated; mutating operations refuse these (restart applies).',
   settingsSave: 'Save',
   settingsSaved: 'Saved',
+  settingsTest: 'Test connection',
+  settingsTestOk: 'Connected: N tools',
+  settingsTestFail: 'Connection failed: ',
+  settingsClear: 'Clear credentials',
+  settingsCleared: 'Credentials cleared',
 } as const
 
 export type TicktickLocale = Record<TicktickLocaleKey, string>
@@ -80,4 +85,9 @@ export const zh: TicktickLocale = {
   settingsProtectedHint: '逗号分隔；变更操作拒绝这些任务（重启生效）。',
   settingsSave: '保存',
   settingsSaved: '已保存',
+  settingsTest: '测试连接',
+  settingsTestOk: '连接成功：N 个工具',
+  settingsTestFail: '连接失败：',
+  settingsClear: '清除凭据',
+  settingsCleared: '凭据已清除',
 } as const

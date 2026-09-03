@@ -31,7 +31,7 @@ import {
   type ToolResolver,
 } from './domain.ts'
 import { McpStreamableClient, type McpCallResult, type McpClientFace } from './mcp.ts'
-import type { TicktickAddResult, TicktickOkResult, TicktickStatus, TicktickTaskWire, TicktickTasksResult } from './wire.ts'
+import type { TicktickAddResult, TicktickOkResult, TicktickProbeResult, TicktickStatus, TicktickTaskWire, TicktickTasksResult } from './wire.ts'
 
 declare module '@deepseek-ai/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
@@ -147,6 +147,24 @@ export class TicktickService extends TypertRemoteService {
     this.resolver = undefined
     this.tokenAtBoot = undefined
     this.bootFailed = false
+  }
+
+  /**
+   * One-shot connectivity check over a throwaway client (the cached bridge
+   * client is untouched): initialize + tool listing against the current
+   * token. Feeds the settings card's "test connection" button.
+   */
+  async probe(): Promise<TicktickProbeResult> {
+    const token = this.config.getToken()
+    if (token === null) return { ok: false, toolCount: 0, error: 'no token configured' }
+    const client = this.createClient(this.config.mcpUrl, token, this.config.toolCallTimeoutMs)
+    try {
+      await client.initialize()
+      const tools = await client.listTools()
+      return { ok: true, toolCount: tools.length, error: null }
+    } catch (error) {
+      return { ok: false, toolCount: 0, error: error instanceof Error ? error.message : String(error) }
+    }
   }
 
   /** List the user's projects (the virtual inbox included). */

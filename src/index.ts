@@ -65,13 +65,15 @@ function defaultTokenFile(): string {
 
 /**
  * Resolve the current Bearer token: the settings card's secret wins, then
- * the configured token file.
+ * the DIDA365_TOKEN environment variable, then the configured token file.
  * @param settings - current settings layer.
  * @param resolved - loader config.
  * @returns the token, or `null` when unconfigured.
  */
 export function resolveToken(settings: TicktickSettings, resolved: ResolvedConfig): string | null {
   if (settings.token !== '') return settings.token
+  const env = process.env.DIDA365_TOKEN
+  if (env !== undefined && env.trim() !== '') return env.trim()
   const file = settings.tokenFile !== ''
     ? settings.tokenFile
     : (resolved.tokenFile !== '' ? resolved.tokenFile : defaultTokenFile())

@@ -13,6 +13,7 @@ import { TICKTICK_INVOCATIONS } from '../wire.ts'
 import type {
   TicktickAddResult,
   TicktickOkResult,
+  TicktickProbeResult,
   TicktickStatus,
   TicktickTasksResult,
 } from '../wire.ts'
@@ -47,6 +48,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     completed: (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>
     search: (query: string) => Promise<RemoteResult<TicktickTasksResult>>
     batchAdd: (tasks: TicktickBatchAddRow[]) => Promise<RemoteResult<TicktickBatchAddResult>>
+    probe: () => Promise<RemoteResult<TicktickProbeResult>>
   }
   interface TypertRemoteMap {
     'ticktick/status': () => Promise<RemoteResult<TicktickStatus>>
@@ -60,6 +62,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     'ticktick/completed': (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>
     'ticktick/search': (query: string) => Promise<RemoteResult<TicktickTasksResult>>
     'ticktick/batchAdd': (tasks: TicktickBatchAddRow[]) => Promise<RemoteResult<TicktickBatchAddResult>>
+    'ticktick/probe': () => Promise<RemoteResult<TicktickProbeResult>>
   }
   interface TypertRemoteNamespaceMap {
     ticktick: TypertRemoteNamespace$ticktick

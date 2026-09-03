@@ -32,8 +32,8 @@ Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action ap
 ## Configuration
 
 1. Get an API 口令 (a `dp_`-prefixed token) from the Dida365/TickTick web app: Profile → Settings → Account & Security → API 口令.
-2. Either paste it into the Settings → Plugins → TickTick card, or write it to `$DSH_HOME/.ticktick-token` (one line). Writing the file activates the bridge without any config change.
-3. Optional: set the token file path, the MCP endpoint (CN default `https://mcp.dida365.com`), and protected task ids in the card.
+2. Pick one of three token sources (priority order): the Settings → Plugins → TickTick card's secret field, the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
+3. Use the card's **Test connection** button to verify the token, and **Clear credentials** to wipe it.
 
 | Config key | Default | Meaning |
 |---|---|---|

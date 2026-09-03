@@ -11,7 +11,7 @@
 import { createElement as h, useEffect, useState } from 'react'
 import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
 import { en, type TicktickLocaleKey } from './locales.ts'
-import type { TicktickSettings } from '../wire.ts'
+import type { TicktickProbeResult, TicktickSettings } from '../wire.ts'
 
 /** Translator face (bound to this plugin's locale namespace by the renderer). */
 export type TicktickSettingsTranslator = (key: TicktickLocaleKey) => string
@@ -19,6 +19,7 @@ export type TicktickSettingsTranslator = (key: TicktickLocaleKey) => string
 /** Props the settings card slot injects. */
 export interface TicktickSettingsCardInjected {
   scope: SettingsScope<TicktickSettings>
+  probe: () => Promise<TicktickProbeResult>
   t?: TicktickSettingsTranslator
 }
 
@@ -36,11 +37,14 @@ interface FormState {
  * @param props - bound scope and optional translator.
  */
 export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React.ReactElement {
-  const { scope } = props
+  const { scope, probe } = props
   const t: TicktickSettingsTranslator = props.t ?? (key => en[key])
   const [form, setForm] = useState<FormState>({ token: '', tokenFile: '', mcpUrl: '', protectedTaskIds: '' })
   const [saved, setSaved] = useState(false)
+  const [cleared, setCleared] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [probeResult, setProbeResult] = useState<TicktickProbeResult | null>(null)
+  const [probing, setProbing] = useState(false)
 
   useEffect(() => scope.subscribe(() => {
     const value = scope.getSnapshot().value
@@ -66,12 +70,40 @@ export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React
   const save = async (): Promise<void> => {
     setError(null)
     setSaved(false)
+    setCleared(false)
     try {
       await scope.set('token', form.token.trim())
       await scope.set('tokenFile', form.tokenFile.trim())
       await scope.set('mcpUrl', form.mcpUrl.trim())
       await scope.set('protectedTaskIds', form.protectedTaskIds.split(',').map(id => id.trim()).filter(id => id !== ''))
       setSaved(true)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    }
+  }
+
+  const test = async (): Promise<void> => {
+    setProbing(true)
+    setProbeResult(null)
+    setError(null)
+    try {
+      const result = await probe()
+      setProbeResult(result)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setProbing(false)
+    }
+  }
+
+  const clear = async (): Promise<void> => {
+    setError(null)
+    setSaved(false)
+    try {
+      await scope.set('token', '')
+      await scope.set('tokenFile', '')
+      setForm({ ...form, token: '', tokenFile: '' })
+      setCleared(true)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
     }
@@ -97,10 +129,26 @@ export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React
     field('protectedTaskIds', t('settingsProtected'), t('settingsProtectedHint')),
     error !== null && h('div', { style: { color: '#c62828', fontSize: '12px', margin: '6px 0' } }, error),
     saved && h('div', { style: { color: '#2e7d32', fontSize: '12px', margin: '6px 0' } }, t('settingsSaved')),
-    h('button', {
-      type: 'button',
-      style: { padding: '6px 14px', borderRadius: '6px', border: '1px solid #ccc', cursor: 'pointer', background: '#f5f5f5' },
-      onClick: () => { void save() },
-    }, t('settingsSave')),
+    cleared && h('div', { style: { color: '#2e7d32', fontSize: '12px', margin: '6px 0' } }, t('settingsCleared')),
+    probeResult !== null && h('div', {
+      style: { color: probeResult.ok ? '#2e7d32' : '#c62828', fontSize: '12px', margin: '6px 0' },
+    }, probeResult.ok ? t('settingsTestOk').replace('N', String(probeResult.toolCount)) : t('settingsTestFail') + (probeResult.error ?? '')),
+    h('div', { style: { display: 'flex', gap: '8px' } },
+      h('button', {
+        type: 'button',
+        style: { padding: '6px 14px', borderRadius: '6px', border: '1px solid #ccc', cursor: 'pointer', background: '#f5f5f5' },
+        onClick: () => { void save() },
+      }, t('settingsSave')),
+      h('button', {
+        type: 'button',
+        disabled: probing,
+        style: { padding: '6px 14px', borderRadius: '6px', border: '1px solid #ccc', cursor: 'pointer', background: '#f5f5f5' },
+        onClick: () => { void test() },
+      }, t('settingsTest')),
+      h('button', {
+        type: 'button',
+        style: { padding: '6px 14px', borderRadius: '6px', border: '1px solid #ccc', cursor: 'pointer', background: '#fff3f3', color: '#c62828' },
+        onClick: () => { void clear() },
+      }, t('settingsClear'))),
   )
 }

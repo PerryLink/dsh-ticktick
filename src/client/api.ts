@@ -8,7 +8,7 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
-import type { TicktickAddResult, TicktickStatus, TicktickTasksResult } from '../wire.ts'
+import type { TicktickAddResult, TicktickProbeResult, TicktickStatus, TicktickTasksResult } from '../wire.ts'
 import type { TicktickBatchAddRow, TicktickProjectsResult } from './remote.ts'
 
 /** Widget-facing data contract (injected into the header action). */
@@ -24,6 +24,7 @@ export interface TicktickApi {
   completed(projectId?: string, days?: number): Promise<TicktickTasksResult>
   search(query: string): Promise<TicktickTasksResult>
   batchAdd(tasks: readonly TicktickBatchAddRow[]): Promise<{ created: number }>
+  probe(): Promise<TicktickProbeResult>
 }
 
 /**
@@ -50,5 +51,6 @@ export function createTicktickApi(scope: Context): TicktickApi {
     completed: async (projectId, days) => unwrap(await scope.remote.ticktick.completed(projectId, days), 'completed'),
     search: async (query) => unwrap(await scope.remote.ticktick.search(query), 'search'),
     batchAdd: async (tasks) => unwrap(await scope.remote.ticktick.batchAdd([...tasks]), 'batchAdd'),
+    probe: async () => unwrap(await scope.remote.ticktick.probe(), 'probe'),
   }
 }

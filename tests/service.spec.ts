@@ -268,6 +268,17 @@ describe('TicktickService', () => {
     expect(result.verifyWarning).toMatch(/mismatch: other title/)
   })
 
+  it('probes the current token with a throwaway client', async () => {
+    const fake = new FakeClient()
+    const { service } = makeService(fake)
+    await expect(service.probe()).resolves.toEqual({ ok: true, toolCount: 11, error: null })
+  })
+
+  it('reports a probe failure without a token', async () => {
+    const { service } = makeService(new FakeClient(), { getToken: () => null })
+    await expect(service.probe()).resolves.toEqual({ ok: false, toolCount: 0, error: 'no token configured' })
+  })
+
   it('reorders inbox tasks via update and project tasks via same-project move', async () => {
     const fake = new FakeClient()
     const { service } = makeService(fake)

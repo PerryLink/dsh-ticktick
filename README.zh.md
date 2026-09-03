@@ -32,8 +32,8 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 ## 配置
 
 1. 在滴答网页版获取 API 口令（`dp_` 开头）：头像 → 设置 → 账户与安全 → API 口令。
-2. 粘进 设置 → 插件 → TickTick 卡片，或写入 `$DSH_HOME/.ticktick-token`（一行）。写文件即生效，无需任何配置变更。
-3. 可选：在卡片中设置令牌文件路径、MCP 端点（国内默认 `https://mcp.dida365.com`）与受保护任务 id。
+2. 三种令牌来源任选其一（优先级从高到低）：设置 → 插件 → TickTick 卡片的 secret 字段、`DIDA365_TOKEN` 环境变量、令牌文件（默认 `$DSH_HOME/.ticktick-token`，一行）。写文件即生效，无需任何配置变更。
+3. 用卡片上的**测试连接**按钮验证令牌，**清除凭据**按钮一键抹除。
 
 | 配置键 | 默认 | 含义 |
 |---|---|---|
