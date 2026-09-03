@@ -28,6 +28,8 @@ jobs:
       # token into the runner npmrc so the publish PUT is authenticated.
       - name: Configure npm registry auth
         shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
       - run: pnpm publish --provenance --access public --no-git-checks
