@@ -24,6 +24,12 @@ jobs:
       - run: pnpm test
       - run: pnpm run build
       - run: pnpm run verify:artifacts
+      # pnpm does not consume NODE_AUTH_TOKEN directly; write the auth
+      # token into the runner npmrc so the publish PUT is authenticated.
+      - name: Configure npm registry auth
+        shell: bash
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
       - run: pnpm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
