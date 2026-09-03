@@ -96,7 +96,10 @@ export async function apply(ctx: ClientContext): Promise<void> {
       id: 'ticktick',
       order: 11,
       locale: NS,
-      inject: (): { api: TicktickApi } => ({ api: createTicktickApi(scope) }),
+      inject: (): { api: TicktickApi, setToken: (token: string) => Promise<void> } => ({
+        api: createTicktickApi(scope),
+        setToken: async (token) => { await settingsScope.set('token', token.trim()) },
+      }),
     }, TicktickAction))
 
     slots.inject('settings.plugin.item', () => slots.register({

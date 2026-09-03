@@ -13,4 +13,5 @@ All notable changes to this project are documented in this file. The format is b
 - Plugin settings card (`settings.plugin.item`, key `ticktick`): secret token, token file, MCP endpoint, protected task ids; live token re-read with 401-triggered client reset.
 - Protected task ids refuse every mutating operation before any wire call.
 - Zero-dependency live-endpoint probes (`probes/`) for handshake, CRUD, due-date detour, reorder semantics, and query-tool contract discovery.
-- Unit specs: domain normalization, MCP client, service workarounds, drag math, due-date presentation.
+- Setup UX: DIDA365_TOKEN env fallback, one-step in-panel token setup with a connection status badge, settings-card Test-connection / Clear-credentials buttons, and CN/International endpoint presets.
+- Unit specs: domain normalization, MCP client, service workarounds, drag math, due-date presentation, token resolution.

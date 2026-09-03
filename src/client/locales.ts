@@ -47,6 +47,16 @@ export const en = {
   settingsTestFail: 'Connection failed: ',
   settingsClear: 'Clear credentials',
   settingsCleared: 'Credentials cleared',
+  panelTokenPlaceholder: 'Paste API token (dp_…)',
+  panelTokenSave: 'Save token',
+  panelTokenHint: 'No token yet — paste it here, or open Settings → Plugins → TickTick.',
+  statusConnected: 'connected',
+  statusNotConnected: 'configured, not connected',
+  statusUnconfigured: 'no token',
+  endpointPreset: 'Endpoint preset',
+  endpointCn: 'CN (mcp.dida365.com)',
+  endpointIntl: 'International (unverified)',
+  endpointCustom: 'Custom',
 } as const
 
 export type TicktickLocale = Record<TicktickLocaleKey, string>
@@ -90,4 +100,14 @@ export const zh: TicktickLocale = {
   settingsTestFail: '连接失败：',
   settingsClear: '清除凭据',
   settingsCleared: '凭据已清除',
+  panelTokenPlaceholder: '粘贴 API 口令（dp_ 开头）',
+  panelTokenSave: '保存令牌',
+  panelTokenHint: '尚未配置令牌——在此粘贴，或前往 设置 → 插件 → TickTick。',
+  statusConnected: '已连接',
+  statusNotConnected: '已配置未连接',
+  statusUnconfigured: '未配置令牌',
+  endpointPreset: '端点预设',
+  endpointCn: '国内（mcp.dida365.com）',
+  endpointIntl: '国际版（未实测）',
+  endpointCustom: '自定义',
 } as const

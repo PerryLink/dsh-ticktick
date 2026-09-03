@@ -24,6 +24,8 @@ export type TicktickTranslator = (key: TicktickLocaleKey) => string
 /** Props the header-actions slot injects. */
 export interface TicktickActionInjected {
   api: TicktickApi
+  /** Write the API token into the settings namespace (one-step panel setup). */
+  setToken: (token: string) => Promise<void>
   t?: TicktickTranslator
 }
 
@@ -44,7 +46,7 @@ type ViewMode = 'undone' | 'completed'
  * @param props - injected api and optional translator.
  */
 export function TicktickAction(props: TicktickActionInjected): ReactElement {
-  const { api } = props
+  const { api, setToken } = props
   const t: TicktickTranslator = props.t ?? (key => en[key])
   const [open, setOpen] = useState(false)
   const [projects, setProjects] = useState<readonly ProjectOption[]>([])
@@ -58,6 +60,8 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
   const [addTitle, setAddTitle] = useState('')
   const [addDue, setAddDue] = useState('')
   const [draggingId, setDraggingId] = useState<string | null>(null)
+  const [status, setStatus] = useState<{ configured: boolean, connected: boolean } | null>(null)
+  const [tokenInput, setTokenInput] = useState('')
   const panelRef = useRef<HTMLDivElement>(null)
 
   const searching = searchQuery.trim() !== ''
@@ -67,6 +71,32 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
   const projectName = (id: string | null): string => {
     if (id === null) return '?'
     return projects.find(project => project.id === id)?.name ?? id
+  }
+
+  const refreshStatus = async (): Promise<void> => {
+    try {
+      const current = await api.status()
+      setStatus({ configured: current.configured, connected: current.connected })
+    } catch {
+      setStatus({ configured: false, connected: false })
+    }
+  }
+
+  const saveToken = async (): Promise<void> => {
+    const token = tokenInput.trim()
+    if (token === '') return
+    setBusy(true)
+    setError(null)
+    try {
+      await setToken(token)
+      setTokenInput('')
+      await refreshStatus()
+      await load()
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setBusy(false)
+    }
   }
 
   const load = async (): Promise<void> => {
@@ -87,7 +117,11 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
       setTasks(taskResult.tasks)
       setWarnings(taskResult.warnings)
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause))
+      // The inline token setup explains the unconfigured state; keep other
+      // failures visible.
+      if (!/no-token|no token/i.test(cause instanceof Error ? cause.message : String(cause))) {
+        setError(cause instanceof Error ? cause.message : String(cause))
+      }
     } finally {
       setBusy(false)
     }
@@ -96,6 +130,7 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
   useEffect(() => {
     if (!open) return
     void load()
+    void refreshStatus()
     const onPointerDown = (event: MouseEvent): void => {
       if (panelRef.current !== null && event.target instanceof Node && !panelRef.current.contains(event.target)) {
         setOpen(false)
@@ -222,7 +257,11 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
           projects.map(project => h('option', { key: project.id, value: project.id }, project.name))),
         viewToggle('undone', t('viewUndone')),
         viewToggle('completed', t('viewCompleted')),
-        h('button', { className: 'tkt-iconbtn', type: 'button', title: t('refresh'), disabled: busy, onClick: () => { void load() } }, '↻')),
+        h('button', { className: 'tkt-iconbtn', type: 'button', title: t('refresh'), disabled: busy, onClick: () => { void load() } }, '↻'),
+        status !== null && h('span', {
+          className: `tkt-chip ${status.configured ? (status.connected ? 'today' : 'overdue') : 'later'}`,
+          title: status.configured ? (status.connected ? t('statusConnected') : t('statusNotConnected')) : t('statusUnconfigured'),
+        }, '●')),
       h('div', { className: 'tkt-row', style: { gap: '6px' } },
         h('input', {
           className: 'tkt-input',
@@ -230,6 +269,18 @@ export function TicktickAction(props: TicktickActionInjected): ReactElement {
           value: searchQuery,
           onChange: (event: ChangeEvent<HTMLInputElement>) => { void runSearch(event.target.value) },
         })),
+      status?.configured === false && h('div', { className: 'tkt-warning', style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+        h('div', null, t('panelTokenHint')),
+        h('div', { style: { display: 'flex', gap: '6px' } },
+          h('input', {
+            className: 'tkt-input',
+            type: 'password',
+            placeholder: t('panelTokenPlaceholder'),
+            value: tokenInput,
+            onChange: (event: ChangeEvent<HTMLInputElement>) => { setTokenInput(event.target.value) },
+            onKeyDown: event => { if (event.key === 'Enter') void saveToken() },
+          }),
+          h('button', { className: 'tkt-iconbtn', type: 'button', disabled: busy || tokenInput.trim() === '', onClick: () => { void saveToken() } }, t('panelTokenSave')))),
       editable && h('div', { className: 'tkt-row', style: { gap: '6px' } },
         h('input', {
           className: 'tkt-input',

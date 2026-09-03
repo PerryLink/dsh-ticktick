@@ -6,9 +6,9 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 ## Features
 
-- **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views).
+- **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views). A status dot shows the connection state; when no token is configured the panel offers one-step in-panel token setup.
 - **Eleven agent tools** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; Code Mode gets `await tools.ticktick_*(args)` for free.
-- **Settings card** — Settings → Plugins → TickTick: API token (secret), token file, MCP endpoint, protected task ids.
+- **Settings card** — Settings → Plugins → TickTick: API token (secret), token file, MCP endpoint with CN/International presets, protected task ids, a Test-connection button, and a Clear-credentials button.
 - **Live token re-read** — the Bearer token is re-read per request (card secret > token file, default `$DSH_HOME/.ticktick-token`); a 401 resets the client so a rotated token activates without restart.
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
 - **Protected ids** — mutating operations refuse tasks on the protected-id list before any wire call.
@@ -91,6 +91,19 @@ node probes/probe-crud.mjs           # create/complete/delete round trip
 node probes/probe-due.mjs            # due dates (+ detour with a PROJECT_ID)
 node probes/probe-reorder.mjs        # sortOrder semantics
 node probes/probe-queries.mjs        # P2 query-tool contract discovery
+```
+
+## Uninstall
+
+```sh
+dsh plugin --profile web remove dsh-ticktick
+```
+
+Restart `dsh web`. All runtime registrations (tools, panel, settings card, prompt section) are removed with the plugin. The only static residue is the token in the user settings document — clear it first with the card's **Clear credentials** button (or remove the token file / `DIDA365_TOKEN` variable) to detach completely. To keep the package installed but inactive, disable the row instead:
+
+```yaml
+- id: ticktick
+  disabled: true
 ```
 
 ## License

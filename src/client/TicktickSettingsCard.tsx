@@ -9,6 +9,7 @@
  */
 
 import { createElement as h, useEffect, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
 import { en, type TicktickLocaleKey } from './locales.ts'
 import type { TicktickProbeResult, TicktickSettings } from '../wire.ts'
@@ -121,11 +122,38 @@ export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React
       }),
       h('div', { style: { fontSize: '11px', color: '#888', marginTop: '2px' } }, hint))
 
+  const presetOf = (url: string): 'cn' | 'intl' | 'custom' => {
+    if (url === 'https://mcp.dida365.com') return 'cn'
+    if (url === 'https://mcp.ticktick.com') return 'intl'
+    return 'custom'
+  }
+
+  const endpointField = h('div', { style: { marginBottom: '8px' } },
+    h('label', { style: { display: 'block', fontSize: '12px', marginBottom: '3px' } }, t('endpointPreset')),
+    h('select', {
+      style: { width: '100%', boxSizing: 'border-box', padding: '5px 7px', borderRadius: '5px', border: '1px solid #ccc' },
+      value: presetOf(form.mcpUrl),
+      onChange: (event: ChangeEvent<HTMLSelectElement>) => {
+        if (event.target.value === 'cn') setForm({ ...form, mcpUrl: 'https://mcp.dida365.com' })
+        else if (event.target.value === 'intl') setForm({ ...form, mcpUrl: 'https://mcp.ticktick.com' })
+      },
+    },
+      h('option', { value: 'cn' }, t('endpointCn')),
+      h('option', { value: 'intl' }, t('endpointIntl')),
+      h('option', { value: 'custom' }, t('endpointCustom'))),
+    h('input', {
+      type: 'text',
+      style: { width: '100%', boxSizing: 'border-box', padding: '5px 7px', borderRadius: '5px', border: '1px solid #ccc', marginTop: '4px' },
+      value: form.mcpUrl,
+      onChange: (event: ChangeEvent<HTMLInputElement>) => { setForm({ ...form, mcpUrl: event.target.value }) },
+    }),
+    h('div', { style: { fontSize: '11px', color: '#888', marginTop: '2px' } }, t('settingsMcpUrlHint')))
+
   return h('div', { style: { padding: '10px 0' } },
     h('div', { style: { fontSize: '14px', fontWeight: 600, marginBottom: '8px' } }, t('settingsName')),
     field('token', t('settingsToken'), t('settingsTokenHint'), 'password'),
     field('tokenFile', t('settingsTokenFile'), t('settingsTokenFileHint')),
-    field('mcpUrl', t('settingsMcpUrl'), t('settingsMcpUrlHint')),
+    endpointField,
     field('protectedTaskIds', t('settingsProtected'), t('settingsProtectedHint')),
     error !== null && h('div', { style: { color: '#c62828', fontSize: '12px', margin: '6px 0' } }, error),
     saved && h('div', { style: { color: '#2e7d32', fontSize: '12px', margin: '6px 0' } }, t('settingsSaved')),

@@ -6,9 +6,9 @@
 
 ## 功能
 
-- **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。
+- **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。常驻连接状态圆点；未配置令牌时面板内直接一步粘贴保存。
 - **11 个 agent 工具**：`ticktick_status`、`ticktick_lists`、`ticktick_tasks`、`ticktick_add`、`ticktick_complete`、`ticktick_delete`、`ticktick_due`、`ticktick_reorder`、`ticktick_completed`、`ticktick_search`、`ticktick_batch_add`；Code Mode 免费获得 `await tools.ticktick_*(args)`。
-- **设置卡片**：设置 → 插件 → TickTick：API 口令（secret）、令牌文件、MCP 端点、受保护任务 id。
+- **设置卡片**：设置 → 插件 → TickTick：API 口令（secret）、令牌文件、端点预设（国内/国际版未实测/自定义）、受保护任务 id、一键**测试连接**与**清除凭据**。
 - **令牌热重读**：Bearer 令牌每次请求重读（卡片 secret 优先于令牌文件，默认 `$DSH_HOME/.ticktick-token`）；401 会重置客户端，轮换令牌无需重启。
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
 - **受保护任务**：变更操作在任何网络调用前拒绝受保护 id 列表中的任务。
@@ -91,6 +91,19 @@ node probes/probe-crud.mjs           # 创建/完成/删除往返
 node probes/probe-due.mjs            # 截止日期（带 PROJECT_ID 可测绕行）
 node probes/probe-reorder.mjs        # sortOrder 语义
 node probes/probe-queries.mjs        # P2 查询工具契约探测
+```
+
+## 卸载
+
+```sh
+dsh plugin --profile web remove dsh-ticktick
+```
+
+重启 `dsh web`。工具、面板、设置卡、系统提示等全部运行态注册随插件卸载一并撤销。唯一静态残留是用户设置文档里的令牌——卸载前用卡片的**清除凭据**按钮抹掉（或删除令牌文件 / `DIDA365_TOKEN` 变量）即可彻底断开。想保留安装但暂时停用，改禁用该行：
+
+```yaml
+- id: ticktick
+  disabled: true
 ```
 
 ## License
