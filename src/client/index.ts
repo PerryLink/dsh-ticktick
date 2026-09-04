@@ -45,7 +45,7 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 export const NS = 'ticktick'
 
 /** Plugin name: matches the package name, the graph row `name`, and the bundle id. */
-export const name = 'dsh-ticktick'
+export const name = '@perrylink/dsh-ticktick'
 
 /** Services the client reads; `remote.ticktick` appears once this plugin mounts its contribution. */
 export const inject = ['slots', 'locale', 'remote', 'settingsScope']

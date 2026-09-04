@@ -71,6 +71,6 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
 
 /** The client Remote contribution for the `ticktick` namespace. */
 export const TICKTICK_REMOTE = Object.freeze({
-  package: 'dsh-ticktick',
+  package: '@perrylink/dsh-ticktick',
   descriptors: TICKTICK_INVOCATIONS,
 }) satisfies TypertRemoteContribution

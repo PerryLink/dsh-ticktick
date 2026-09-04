@@ -2,6 +2,8 @@
 
 Standalone DeepSeek Harness plugin repository (`dsh-ticktick`). Development follows the dsh-plugin-guide skill and the official plugin contract; this file records repo-local decisions.
 
+Naming exception: the repo is `dsh-ticktick` but the npm package is scoped `@perrylink/dsh-ticktick` (the bare npm name belongs to another account). The package name appears in `package.json#name`, the bundle-patch row `name`, the client bundle id (`src/client/index.ts` `name` export + `verify-artifacts.mjs` banner), the Typert Remote `package` field (`src/client/remote.ts`), the packed tarball name (`perrylink-dsh-ticktick-<version>.tgz`), and the npm-channel install commands. The plugin id `ticktick`, the settings namespace, and all tool names are NOT the package name and never change with it.
+
 ## Layout
 
 - `src/index.ts` — function-plugin contract (`name`/`inject`/`Config`/`apply`; NO default export — the Loader unwraps `exports.default ?? exports`). Mounts the settings namespace (`ticktick`), the service, the eleven tools, and the system-prompt usage section.

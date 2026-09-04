@@ -18,7 +18,7 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 ```sh
 # npm (published artifact includes lib/, no build permission needed)
-dsh plugin --profile web add dsh-ticktick
+dsh plugin --profile web add @perrylink/dsh-ticktick
 
 # git source (pin a commit; pnpm asks you to allow the prepare build once)
 dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
@@ -96,7 +96,7 @@ node probes/probe-queries.mjs        # P2 query-tool contract discovery
 ## Uninstall
 
 ```sh
-dsh plugin --profile web remove dsh-ticktick
+dsh plugin --profile web remove @perrylink/dsh-ticktick
 ```
 
 Restart `dsh web`. All runtime registrations (tools, panel, settings card, prompt section) are removed with the plugin. The only static residue is the token in the user settings document — clear it first with the card's **Clear credentials** button (or remove the token file / `DIDA365_TOKEN` variable) to detach completely. To keep the package installed but inactive, disable the row instead:

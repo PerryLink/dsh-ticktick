@@ -19,7 +19,7 @@ const version = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8')).ver
 const home = mkdtempSync(join(tmpdir(), 'dsh-ticktick-verify-'))
 console.log(`verify-self-contained: temp DSH_HOME ${home}`)
 try {
-  const tarball = join(repo, `dsh-ticktick-${version}.tgz`)
+  const tarball = join(repo, `perrylink-dsh-ticktick-${version}.tgz`)
   if (!existsSync(tarball)) {
     const pack = spawnSync('pnpm', ['pack'], { cwd: repo, stdio: 'inherit', shell: process.platform === 'win32' })
     if (pack.status !== 0) process.exit(pack.status ?? 1)

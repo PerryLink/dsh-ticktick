@@ -6,7 +6,7 @@
 # the file activates the bridge without a config change.
 - insert:
     - id: ticktick
-      name: dsh-ticktick
+      name: '@perrylink/dsh-ticktick'
       config:
         # Path to a text file holding the Bearer token. Empty (default)
         # resolves to <DSH_HOME>/.ticktick-token at request time.

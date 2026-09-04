@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-09-04
+
+### Changed
+
+- Republish under the scoped npm name `@perrylink/dsh-ticktick`: the bare `dsh-ticktick` name is owned by another account (publish E403), so the package, the bundle-patch row, the client bundle id, and the five-language install commands now carry the scoped name; the plugin id (`ticktick`), settings namespace, tools, and repository stay unchanged.
+- Align the devDependency pins to the published dsh `0.1.2-rc.1` line and add the `dshWorkshop` omdsh-workshop-package/v1 intake manifest (carried over from the unreleased 0.1.1).
+
 ## [0.1.0] - 2026-09-03
 
 ### Added

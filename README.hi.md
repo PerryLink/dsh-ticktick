@@ -11,7 +11,7 @@
 ## 啶囙啶膏啶熰啶侧啶多え
 
 ```sh
-dsh plugin --profile web add dsh-ticktick          # npm (lib/ 啶膏す啶苦い)
+dsh plugin --profile web add @perrylink/dsh-ticktick # npm (lib/ 啶膏す啶苦い)
 dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # 啶膏啶ムぞ啶ㄠ啶?```
 

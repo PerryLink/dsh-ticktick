@@ -2,7 +2,7 @@
  * Build faces for dsh-ticktick. The node half (src/index.ts + the
  * hand-written Typert host manifest src/typert.host.ts) is the host Loader
  * entry; the browser half (src/client/index.ts) is the client bundle the
- * client-modules node half serves under /plugins/dsh-ticktick/client.js.
+ * client-modules node half serves under /plugins/@perrylink/dsh-ticktick/client.js.
  *
  * The browser half follows the shell's client-bundle handshake exactly: a
  * CJS bundle wrapped in `window.__ModuleLoader__.load({ id, factory })`,
@@ -14,7 +14,7 @@
 import { defineConfig } from 'tsdown'
 
 /** Plugin id: the package name, the graph row `name`, and the stamped bundle id must all match. */
-const PLUGIN_ID = 'dsh-ticktick'
+const PLUGIN_ID = '@perrylink/dsh-ticktick'
 
 /**
  * Module specifiers the shell shares into the frozen browser module table

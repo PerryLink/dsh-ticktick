@@ -40,7 +40,7 @@ if (offenders.length > 0) {
 
 const client = readFileSync(join(repo, 'lib/client.js'), 'utf8')
 // The formatter may reflow the banner; compare on whitespace-normalized text.
-if (!client.replace(/\s+/g, ' ').includes('window.__ModuleLoader__.load({ id: "dsh-ticktick", factory: (require) => {')) {
+if (!client.replace(/\s+/g, ' ').includes('window.__ModuleLoader__.load({ id: "@perrylink/dsh-ticktick", factory: (require) => {')) {
   console.error('verify-artifacts: client bundle missing the ModuleLoader banner with the plugin id')
   process.exit(1)
 }

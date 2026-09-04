@@ -17,7 +17,7 @@ Ponte de tarefas TickTick / Dida365 (婊寸瓟娓呭崟) para o [DeepSeek Harnes
 ## Instala莽茫o
 
 ```sh
-dsh plugin --profile web add dsh-ticktick          # npm (inclui lib/)
+dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (inclui lib/)
 dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
 ```

@@ -18,7 +18,7 @@
 
 ```sh
 # npm（发布产物含 lib/，无需构建许可）
-dsh plugin --profile web add dsh-ticktick
+dsh plugin --profile web add @perrylink/dsh-ticktick
 
 # git 源码（钉住 commit；pnpm 首次会请你放行 prepare 构建）
 dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
@@ -96,7 +96,7 @@ node probes/probe-queries.mjs        # P2 查询工具契约探测
 ## 卸载
 
 ```sh
-dsh plugin --profile web remove dsh-ticktick
+dsh plugin --profile web remove @perrylink/dsh-ticktick
 ```
 
 重启 `dsh web`。工具、面板、设置卡、系统提示等全部运行态注册随插件卸载一并撤销。唯一静态残留是用户设置文档里的令牌——卸载前用卡片的**清除凭据**按钮抹掉（或删除令牌文件 / `DIDA365_TOKEN` 变量）即可彻底断开。想保留安装但暂时停用，改禁用该行：
