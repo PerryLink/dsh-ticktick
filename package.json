@@ -1,6 +1,6 @@
 {
   "name": "dsh-ticktick",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TickTick (Dida365) task bridge for DeepSeek Harness: a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder) over the official TickTick MCP endpoint, a Ticktick Remote service, curated agent tools, and a plugin settings card.",
   "repository": {
     "type": "git",
@@ -55,6 +55,47 @@
         "@deepseek-ai/dsh-client-ui-conversation",
         "@deepseek-ai/dsh-client-ui-primitives"
       ]
+    },
+    "dshWorkshop": {
+      "schema": "omdsh-workshop-package/v1",
+      "type": "plugin",
+      "integration": {
+        "protocol": "harness-profile",
+        "artifact": "cordis.patch.yml"
+      },
+      "install": {
+        "mode": "transactional",
+        "adapter": "profile-bundle",
+        "failurePolicy": "generation-rollback",
+        "touchesCurrentBeforeActivation": false
+      },
+      "lifecycle": {
+        "activation": "restart-plugin",
+        "dispose": "supported"
+      },
+      "permissions": [
+        "browser:local-storage",
+        "settings:read",
+        "settings:write",
+        "network:https://mcp.dida365.com"
+      ],
+      "compatibility": {
+        "dshVersions": [
+          "0.1.2-rc.1"
+        ]
+      },
+      "capability": {
+        "id": "ticktick-task-panel",
+        "kind": "ui",
+        "invocation": "open the ticktick panel from a session header",
+        "expected": "the task list renders and quick add/complete/delete operations reach the configured TickTick endpoint"
+      },
+      "evidence": {
+        "install": null,
+        "failureIsolation": null,
+        "hotReload": null,
+        "remove": null
+      }
     }
   },
   "keywords": [
@@ -107,17 +148,17 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.2",
-    "@deepseek-ai/dsh-api-remotes": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-locale": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-ui-conversation": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-ui-primitives": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-ui-settings": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-ui-settings-plugins": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-client-ui-slots": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-settings": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-system-prompt": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-tools": "0.1.2-alpha.5",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.2-alpha.5",
+    "@deepseek-ai/dsh-api-remotes": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-locale": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings-plugins": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-settings": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-system-prompt": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-tools": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.2-rc.1",
     "@deepseek-ai/schemastery": "^3.18.0",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^22.19.0",
