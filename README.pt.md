@@ -1,5 +1,13 @@
 # dsh-ticktick
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![DSH plugin](https://img.shields.io/badge/dsh-plugin-✅-green)](https://github.com/topics/dsh-plugin)
+[![Gitee](https://img.shields.io/badge/Gitee-mirror-c71d23?logo=gitee)](https://gitee.com/perrylink/dsh-ticktick)
+[![CI](https://img.shields.io/github/actions/workflow/status/PerryLink/dsh-ticktick/ci.yml?branch=main&label=CI)](https://github.com/PerryLink/dsh-ticktick/actions)
+[![Version](https://img.shields.io/github/v/tag/PerryLink/dsh-ticktick?label=version)](https://github.com/PerryLink/dsh-ticktick/releases)
+[![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
+[![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
+
 [English](README.md) | [涓枃](README.zh.md) | [Espa帽ol](README.es.md) | **Portugu锚s** | [啶灌た啶ㄠ啶︵](README.hi.md)
 
 Ponte de tarefas TickTick / Dida365 (婊寸瓟娓呭崟) para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): painel de tarefas no cabe莽alho da sess茫o (filtro por lista, adi莽茫o r谩pida, concluir, excluir, datas de vencimento, reordenar arrastando), Onze ferramentas do agente, cart茫o de configura莽茫o e um servi莽o Remote tipado 鈥?tudo sobre o endpoint MCP oficial do TickTick.

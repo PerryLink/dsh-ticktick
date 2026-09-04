@@ -1,5 +1,13 @@
 # dsh-ticktick
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![DSH plugin](https://img.shields.io/badge/dsh-plugin-✅-green)](https://github.com/topics/dsh-plugin)
+[![Gitee](https://img.shields.io/badge/Gitee-mirror-c71d23?logo=gitee)](https://gitee.com/perrylink/dsh-ticktick)
+[![CI](https://img.shields.io/github/actions/workflow/status/PerryLink/dsh-ticktick/ci.yml?branch=main&label=CI)](https://github.com/PerryLink/dsh-ticktick/actions)
+[![Version](https://img.shields.io/github/v/tag/PerryLink/dsh-ticktick?label=version)](https://github.com/PerryLink/dsh-ticktick/releases)
+[![npm version](https://img.shields.io/npm/v/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
+[![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
+
 [English](README.md) | [涓枃](README.zh.md) | [Espa帽ol](README.es.md) | [Portugu锚s](README.pt.md) | **啶灌た啶ㄠ啶︵**
 
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 啶曕 啶侧た啶?TickTick / Dida365 (婊寸瓟娓呭崟) 啶曕ぞ啶班啶?啶膏啶む: 啶膏い啷嵿ぐ-啶多啶班啶?啶曕ぞ啶班啶?啶啶ㄠげ (啶膏啶氞 啶ぜ啶苦げ啷嵿啶? 啶む啶掂ぐ啶苦い 啶溹啶∴ぜ, 啶啶班啶?啶曕ぐ啷囙, 啶灌啶距啶? 啶ㄠた啶い 啶むた啶ムた啶ぞ啶? 啶∴啶班啶?啶曕啶班ぎ), 啶嗋 啶忇啷囙啶?啶夃お啶曕ぐ啶? 啶膏啶熰た啶傕 啶曕ぞ啶班啶?啶斷ぐ 啶忇 啶熰ぞ啶囙お啷嵿ぁ Remote 啶膏啶掂ぞ 鈥?啶膏が 啶嗋ぇ啶苦啶距ぐ啶苦 TickTick MCP 啶忇啶∴お啷夃啶傕 啶ぐ啷?
