@@ -12,6 +12,12 @@
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的滴答清单（TickTick / Dida365）任务桥：会话头部任务面板（清单筛选、快速添加、完成、删除、截止日期、拖拽排序）、11 个精选 agent 工具、插件设置卡片，以及类型化的 Remote 服务——全部走官方滴答 MCP 端点。
 
+## 兼容性
+
+| 方面 | 状态 |
+|---|---|
+| Harness | DeepSeek Harness **dsh-v0.1.3-alpha.1**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.2-rc.1**（peers `>=0.1.2-rc.1 <0.2.0`）。已于 2026-09-06 对照 dsh-v0.1.3-alpha.1 master checkout 核验（完整门禁链 + profile 安装冒烟）。 |
+
 ## 功能
 
 - **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。常驻连接状态圆点；未配置令牌时面板内直接一步粘贴保存。

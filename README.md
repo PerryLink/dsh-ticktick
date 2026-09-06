@@ -12,6 +12,12 @@
 
 TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a plugin settings card, and a typed Remote service — all over the official TickTick MCP endpoint.
 
+## Compatibility
+
+| Surface | Status |
+|---|---|
+| Harness | DeepSeek Harness **dsh-v0.1.3-alpha.1** (GitHub tag). npm dependency line: `@deepseek-ai/dsh` **0.1.2-rc.1** (peers `>=0.1.2-rc.1 <0.2.0`). Verified 2026-09-06 against the dsh-v0.1.3-alpha.1 master checkout (full gate chain + profile install smoke). |
+
 ## Features
 
 - **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views). A status dot shows the connection state; when no token is configured the panel offers one-step in-panel token setup.
