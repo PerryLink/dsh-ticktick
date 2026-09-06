@@ -37,5 +37,9 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick              # 啶膏
 
 啶呧啶むぐ啷嵿ぐ啶距し啷嵿啷嵿ぐ啷€啶?啶忇啶∴お啷夃啶傕 啶膏い啷嵿く啶距お啶苦い 啶ㄠす啷€啶?啶灌; 啶啶班啶?啶︵啶多啶?啶斷ぐ 啶栢啶?啶ぞ啶?啶啶?(`probes/probe-queries.mjs` 啶呧え啷佮が啶傕ぇ 啶栢啶溹い啶?啶灌); `dsh web` 啶曕 啶囙啶熰ぐ啶ㄠ啶?啶ぐ 啶夃啶距啶?啶?啶曕ぐ啷囙啷?啶侧ぞ啶囙さ 啶膏い啷嵿く啶距お啶? `DIDA365_TOKEN` 啶ㄠた啶班啶ぞ啶?啶曕ぐ啷囙 啶斷ぐ `node probes/probe-*.mjs` 啶氞げ啶距啶佮イ
 
+### DSH Desktop मार्केट से इंस्टॉल करें
+
+सभी PerryLink प्लगइन DSH Desktop के बिल्ट-इन मार्केट में देखे जा सकते हैं: **Market → Sources → add source → पेस्ट करें** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ चुनें**। इंस्टॉलेशन मार्केट के npm-identity सत्यापन और आपकी पुष्टि से ही होता है।
+
 ## 啶侧ぞ啶囙じ啷囙啶?
 [Apache-2.0](LICENSE)

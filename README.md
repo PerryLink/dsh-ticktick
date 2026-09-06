@@ -114,6 +114,10 @@ Restart `dsh web`. All runtime registrations (tools, panel, settings card, promp
   disabled: true
 ```
 
+### Install from the DSH Desktop Market
+
+All PerryLink plugins are browsable in the built-in DSH Desktop Market: **Market → Sources → add source → paste** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ select it**. Installation still goes through the Market's npm-identity verification and your confirmation.
+
 ## License
 
 [Apache-2.0](LICENSE)

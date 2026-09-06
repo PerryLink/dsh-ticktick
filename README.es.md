@@ -44,6 +44,10 @@ Reinicia `dsh web`. Obt茅n el token API 鍙ｄ护 (prefijo `dp_`) en la web de 
 
 El endpoint internacional no est谩 verificado; las vistas de completadas y la b煤squeda se difieren (contratos descubiertos por `probes/probe-queries.mjs`); no expongas `dsh web` a internet. Verificaci贸n en vivo: exporta `DIDA365_TOKEN` y ejecuta `node probes/probe-*.mjs`.
 
+### Instalar desde el mercado de DSH Desktop
+
+Todos los plugins de PerryLink pueden explorarse en el mercado integrado de DSH Desktop: **Market → Sources → add source → pegar** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ seleccionarlo**. La instalación sigue pasando por la verificación de identidad npm del mercado y tu confirmación.
+
 ## Licencia
 
 [Apache-2.0](LICENSE)
