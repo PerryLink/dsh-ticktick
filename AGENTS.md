@@ -43,4 +43,4 @@ Schema in `src/config.ts` (Schemastery, fail-loud bounds, explicit `resolveConfi
 
 ## Peer versions
 
-Peer deps range `>=0.1.0-rc.8 <0.2.0` (host faces) and `>=0.1.1-rc.2 <0.2.0` (client faces, optional); the package runs against harness installations ≥ rc.8 (the profile's hoisted module fallback resolves peers to the installation's own copies). `@types/node` tracks the `engines` floor (Node 22 line).
+Peer deps range `>=0.1.2-rc.1 <0.2.0` (host and client faces; the older `>=0.1.0-rc.8 <0.2.0` / `>=0.1.1-rc.2 <0.2.0` band was retired across the family on 2026-09-05 because npm's prerelease-tuple rules made the bare range resolve to a single prerelease); the package runs against harness installations ≥ 0.1.2-rc.1 (the profile's hoisted module fallback resolves peers to the installation's own copies). `@types/node` tracks the `engines` floor (Node 22 line).
