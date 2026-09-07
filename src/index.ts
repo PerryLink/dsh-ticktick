@@ -50,6 +50,7 @@ export type * from './wire.ts'
 /** Settings namespace the browser card edits (paired by this exact key). */
 export const SETTINGS_NS = TICKTICK_SETTINGS_NS
 
+// Service Definition — public contract: the settings schema and the exported service/tool faces.
 /** Schemastery schema for the settings namespace (the card renders this). */
 export const TicktickSettingsSchema: z<TicktickSettings> = z.object({
   token: z.string().role('secret').default(''),
@@ -124,6 +125,7 @@ export async function apply(ctx: Context, config: Config | undefined): Promise<v
 
   // The service has no injects beyond its own registration; capture the
   // mounted instance for the tools and the settings change hook.
+  // Service Provider — registration: mount the ticktick Remote service and register the eleven tools.
   await ctx.plugin(TicktickService, serviceConfig)
   service = ctx.get('ticktick') as TicktickService
 
@@ -131,6 +133,7 @@ export async function apply(ctx: Context, config: Config | undefined): Promise<v
     ctx.effect(() => ctx.tools.register(tool), `dsh-ticktick: ${tool.name} tool`)
   }
 
+  // Consumer — announce the tool set through the systemPrompt section.
   ctx.effect(() => ctx.systemPrompt.section({
     name: 'ticktick:usage',
     order: 350,
