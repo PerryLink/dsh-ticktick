@@ -26,5 +26,7 @@ jobs:
       - run: pnpm run typecheck:ci
       - run: pnpm test
       - run: pnpm run lint
+      - name: README sync (five languages)
+        run: pnpm run check:readmes
       - run: pnpm run build
       - run: pnpm run verify:artifacts

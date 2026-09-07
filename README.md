@@ -49,7 +49,7 @@ Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action ap
 2. Pick one of three token sources (priority order): the Settings → Plugins → TickTick card's secret field, the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
 3. Use the card's **Test connection** button to verify the token, and **Clear credentials** to wipe it.
 
-| Config key | Default | Meaning |
+| Key | Default | Meaning |
 |---|---|---|
 | `tokenFile` | `''` | Path to a text file holding the token; empty resolves to `$DSH_HOME/.ticktick-token` |
 | `mcpUrl` | `https://mcp.dida365.com` | TickTick MCP endpoint (the international endpoint is unverified — see below) |

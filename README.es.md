@@ -36,19 +36,84 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
 ```
 
-Reinicia `dsh web`. Obtén un token API 口令 (con prefijo `dp_`) en la web de Dida365 (Perfil → Ajustes → Cuenta y seguridad → API 口令) y pégalo en la tarjeta, escríbelo en `$DSH_HOME/.ticktick-token` (una línea) o expórtalo en `DIDA365_TOKEN`.
+Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `ticktick` aparece en la cabecera de sesión; la tarjeta aparece en Ajustes → Plugins.
+
+## Configuración
+
+1. Consigue un API 口令 (un token con prefijo `dp_`) desde la web de Dida365/TickTick: Perfil → Ajustes → Cuenta y seguridad → API 口令.
+2. Elige una de las tres fuentes de token (orden de prioridad): el campo secreto de la tarjeta Ajustes → Plugins → TickTick, la variable de entorno `DIDA365_TOKEN`, o un archivo de token (por defecto `$DSH_HOME/.ticktick-token`, una línea). Escribir el archivo activa el puente sin ningún cambio de configuración.
+3. Usa el botón **Probar conexión** de la tarjeta para verificar el token y **Limpiar credenciales** para borrarlo.
 
 | Clave | Por defecto | Significado |
 |---|---|---|
 | `tokenFile` | `''` | Archivo de token; vacío = `$DSH_HOME/.ticktick-token` |
-| `mcpUrl` | `https://mcp.dida365.com` | Endpoint MCP (el internacional no está verificado) |
+| `mcpUrl` | `https://mcp.dida365.com` | Endpoint MCP de TickTick (el internacional no está verificado — ver más abajo) |
 | `toolCallTimeoutMs` | `30000` | Plazo por tools/call en ms |
 | `protectedTaskIds` | `[]` | Ids que las mutaciones rechazan |
-| `tools.*` | `''` | Nombres MCP fijados; `''` = descubrir |
+| `tools.*` | `''` | Nombres MCP fijados (projects/tasks/create/complete/remove/update/move); `''` = descubrir por patrón |
 
-## Limitaciones
+## Herramientas del agente
 
-El endpoint internacional no está verificado; las vistas de completadas, la búsqueda y la adición por lotes usan las herramientas MCP `list_completed_tasks_by_date`, `search` y `batch_add_tasks`, cuyos contratos vienen del catálogo publicado y están **pendientes de reverificación** contra el endpoint real (ejecuta `probes/probe-queries.mjs` con un token real). El crash medido de `update_task` y los fallos de validación de listas son comportamientos del servidor; `probes/` los reverifica antes de cada release. El token se guarda localmente y solo se envía a los servidores de TickTick; no expongas `dsh web` a internet público. Verificación en vivo: exporta `DIDA365_TOKEN` y ejecuta `node probes/probe-*.mjs`.
+| Herramienta | Propósito |
+|---|---|
+| `ticktick_status` | estado de la conexión: token configurado, cliente conectado, endpoint, último error |
+| `ticktick_lists` | todas las listas (proyectos), la Bandeja de entrada virtual incluida |
+| `ticktick_tasks` | tareas pendientes: una lista o todas agregadas, con avisos por lista |
+| `ticktick_add` | crear una tarea (lista, fecha ISO opcional) |
+| `ticktick_complete` | completar una tarea (id de tarea + id de lista) |
+| `ticktick_delete` | borrar una tarea (id de tarea + id de lista) |
+| `ticktick_due` | fijar/limpiar una fecha límite (omitir la fecha para limpiar) |
+| `ticktick_reorder` | asignar un nuevo sortOrder entero (las listas ordenan por sortOrder descendente) |
+| `ticktick_completed` | tareas completadas en una ventana (30 días por defecto), opcionalmente una lista |
+| `ticktick_search` | búsqueda de texto completo sobre tareas (la herramienta oficial de búsqueda) |
+| `ticktick_batch_add` | crear varias tareas en una llamada |
+
+## Arquitectura
+
+```
+panel del navegador ── ctx.remote.ticktick.* ──▶ TicktickService (Typert Remote)
+tarjeta de ajustes ── ctx.settingsScope ──────▶ namespace de ajustes "ticktick"
+herramientas ──────── ctx.tools (ticktick_*) ─▶ el mismo servicio
+                     │
+                     ▼
+         cliente MCP HTTP streamable mínimo
+         (id de sesión, versión de protocolo, Retry-After)
+                     │
+                     ▼
+         https://mcp.dida365.com  (MCP oficial de TickTick)
+```
+
+## Limitaciones conocidas
+
+- El endpoint internacional de TickTick **no está verificado**: `mcpUrl` apunta por defecto al endpoint CN y la URL MCP internacional no ha sido probada.
+- La vista de completadas, la búsqueda y la adición por lotes usan las herramientas MCP `list_completed_tasks_by_date`, `search` y `batch_add_tasks`; sus contratos provienen del catálogo publicado (`dida365-sdk` stubs) y la **reverificación contra el endpoint real está pendiente** — ejecuta `probes/probe-queries.mjs` con un token real antes de darlos por verificados.
+- El crash medido de `update_task` y los fallos de validación de listas son comportamientos del servidor; `probes/` los reverifica contra el endpoint real antes de un release (ejecuta con `DIDA365_TOKEN` exportado).
+- La superficie `/api` que usa el panel es el gateway Typert estándar del harness; el token se guarda localmente (documento de ajustes o archivo de token) y se envía solo a los servidores de TickTick. No expongas una instancia `dsh web` a internet público.
+
+## Verificar el puente contra el endpoint real
+
+```sh
+# PowerShell
+$env:DIDA365_TOKEN='dp_...'
+node probes/probe-bootstrap.mjs      # handshake + catálogo de herramientas
+node probes/probe-crud.mjs           # ciclo crear/completar/borrar
+node probes/probe-due.mjs            # fechas límite (+ desvío con un PROJECT_ID)
+node probes/probe-reorder.mjs        # semántica de sortOrder
+node probes/probe-queries.mjs        # descubrimiento del contrato P2 de consultas
+```
+
+## Desinstalación
+
+```sh
+dsh plugin --profile web remove @perrylink/dsh-ticktick
+```
+
+Reinicia `dsh web`. Todos los registros en tiempo de ejecución (herramientas, panel, tarjeta de ajustes, sección del prompt) se eliminan con el plugin. El único residuo estático es el token en el documento de ajustes del usuario — límpialo primero con el botón **Limpiar credenciales** de la tarjeta (o elimina el archivo de token / la variable `DIDA365_TOKEN`) para desvincular por completo. Para mantener el paquete instalado pero inactivo, desactiva la fila en su lugar:
+
+```yaml
+- id: ticktick
+  disabled: true
+```
 
 ### Instalar desde el mercado de DSH Desktop
 

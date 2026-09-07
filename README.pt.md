@@ -36,19 +36,84 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
 ```
 
-Reinicie o `dsh web`. Obtenha um token de API 口令 (com prefixo `dp_`) no site do Dida365 (Perfil → Ajustes → Conta e segurança → API 口令) e cole-o no cartão, escreva-o em `$DSH_HOME/.ticktick-token` (uma linha) ou exporte-o em `DIDA365_TOKEN`.
+Reinicie o `dsh web` (plugins de bundle são ativados ao reiniciar). A ação `ticktick` aparece no cabeçalho da sessão; o cartão aparece em Ajustes → Plugins.
+
+## Configuração
+
+1. Obtenha um API 口令 (um token com prefixo `dp_`) no site do Dida365/TickTick: Perfil → Ajustes → Conta e segurança → API 口令.
+2. Escolha uma das três fontes de token (ordem de prioridade): o campo secreto do cartão Ajustes → Plugins → TickTick, a variável de ambiente `DIDA365_TOKEN`, ou um arquivo de token (padrão `$DSH_HOME/.ticktick-token`, uma linha). Escrever o arquivo ativa a ponte sem nenhuma mudança de configuração.
+3. Use o botão **Testar conexão** do cartão para verificar o token e **Limpar credenciais** para apagá-lo.
 
 | Chave | Padrão | Significado |
 |---|---|---|
 | `tokenFile` | `''` | Arquivo de token; vazio = `$DSH_HOME/.ticktick-token` |
-| `mcpUrl` | `https://mcp.dida365.com` | Endpoint MCP (o internacional não está verificado) |
+| `mcpUrl` | `https://mcp.dida365.com` | Endpoint MCP do TickTick (o internacional não está verificado — veja abaixo) |
 | `toolCallTimeoutMs` | `30000` | Prazo por tools/call em ms |
 | `protectedTaskIds` | `[]` | Ids que as mutações recusam |
-| `tools.*` | `''` | Nomes MCP fixados; `''` = descobrir |
+| `tools.*` | `''` | Nomes MCP fixados (projects/tasks/create/complete/remove/update/move); `''` = descobrir por padrão |
 
-## Limitações
+## Ferramentas do agente
 
-O endpoint internacional não está verificado; as vistas de concluídas, a busca e a adição em lote usam as ferramentas MCP `list_completed_tasks_by_date`, `search` e `batch_add_tasks`, cujos contratos vêm do catálogo publicado e estão **pendentes de reverificação** contra o endpoint real (execute `probes/probe-queries.mjs` com um token real). O crash medido de `update_task` e as falhas de validação de listas são comportamentos do servidor; `probes/` os reverifica antes de cada release. O token fica armazenado localmente e só é enviado aos servidores do TickTick; não exponha `dsh web` à internet pública. Verificação ao vivo: exporte `DIDA365_TOKEN` e execute `node probes/probe-*.mjs`.
+| Ferramenta | Finalidade |
+|---|---|
+| `ticktick_status` | estado da conexão: token configurado, cliente conectado, endpoint, último erro |
+| `ticktick_lists` | todas as listas (projetos), incluída a Caixa de entrada virtual |
+| `ticktick_tasks` | tarefas pendentes: uma lista ou todas agregadas, com avisos por lista |
+| `ticktick_add` | criar uma tarefa (lista, data ISO opcional) |
+| `ticktick_complete` | concluir uma tarefa (id da tarefa + id da lista) |
+| `ticktick_delete` | excluir uma tarefa (id da tarefa + id da lista) |
+| `ticktick_due` | definir/limpar uma data de vencimento (omitir a data para limpar) |
+| `ticktick_reorder` | atribuir um novo sortOrder inteiro (as listas ordenam por sortOrder decrescente) |
+| `ticktick_completed` | tarefas concluídas em uma janela (30 dias por padrão), opcionalmente uma lista |
+| `ticktick_search` | busca de texto completo sobre tarefas (a ferramenta oficial de busca) |
+| `ticktick_batch_add` | criar várias tarefas em uma chamada |
+
+## Arquitetura
+
+```
+painel do navegador ── ctx.remote.ticktick.* ──▶ TicktickService (Typert Remote)
+cartão de ajustes ──── ctx.settingsScope ──────▶ namespace de ajustes "ticktick"
+ferramentas do agente ctx.tools (ticktick_*) ──▶ o mesmo serviço
+                     │
+                     ▼
+         cliente MCP HTTP streamable mínimo
+         (id de sessão, versão de protocolo, Retry-After)
+                     │
+                     ▼
+         https://mcp.dida365.com  (MCP oficial do TickTick)
+```
+
+## Limitações conhecidas
+
+- O endpoint internacional do TickTick **não está verificado**: `mcpUrl` aponta por padrão para o endpoint CN e a URL MCP internacional não foi testada.
+- A vista de concluídas, a busca e a adição em lote usam as ferramentas MCP `list_completed_tasks_by_date`, `search` e `batch_add_tasks`; seus contratos vêm do catálogo publicado (`dida365-sdk` stubs) e a **reverificação contra o endpoint real está pendente** — execute `probes/probe-queries.mjs` com um token real antes de dá-las por verificadas.
+- O crash medido de `update_task` e as falhas de validação de listas são comportamentos do servidor; `probes/` os reverifica contra o endpoint real antes de um release (execute com `DIDA365_TOKEN` exportado).
+- A superfície `/api` usada pelo painel é o gateway Typert padrão do harness; o token fica armazenado localmente (documento de ajustes ou arquivo de token) e só é enviado aos servidores do TickTick. Não exponha uma instância `dsh web` à internet pública.
+
+## Verificar a ponte contra o endpoint real
+
+```sh
+# PowerShell
+$env:DIDA365_TOKEN='dp_...'
+node probes/probe-bootstrap.mjs      # handshake + catálogo de ferramentas
+node probes/probe-crud.mjs           # ciclo criar/concluir/excluir
+node probes/probe-due.mjs            # datas de vencimento (+ desvio com um PROJECT_ID)
+node probes/probe-reorder.mjs        # semântica de sortOrder
+node probes/probe-queries.mjs        # descoberta do contrato P2 de consultas
+```
+
+## Desinstalação
+
+```sh
+dsh plugin --profile web remove @perrylink/dsh-ticktick
+```
+
+Reinicie o `dsh web`. Todos os registros em tempo de execução (ferramentas, painel, cartão de ajustes, seção do prompt) são removidos com o plugin. O único resíduo estático é o token no documento de ajustes do usuário — limpe-o primeiro com o botão **Limpar credenciais** do cartão (ou remova o arquivo de token / a variável `DIDA365_TOKEN`) para desvincular por completo. Para manter o pacote instalado mas inativo, desative a linha em vez disso:
+
+```yaml
+- id: ticktick
+  disabled: true
+```
 
 ### Instalar a partir do mercado do DSH Desktop
 
