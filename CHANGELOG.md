@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-09-07
+
+### Fixed
+
+- Align the `@deepseek-ai/dsh-*` peer ranges to `>=0.1.2-rc.1 <0.2.0`: the older `>=0.1.0-rc.8 <0.2.0` band resolved to only the `0.1.0-rc.8` prerelease under registry-driven resolution and broke fresh tarball installs; no behavior change.
+
+### Docs
+
+- Repair the mojibake in the es/pt/hi READMEs, complete their sections, and add the five-language readme-sync gate (`check:readmes`); refresh the support-version wording (GitHub tag `dsh-v0.1.3-alpha.1` leads, npm `0.1.2-rc.1` pin) and the Desktop Market install note; no behavior change.
+
+
 ## [0.1.2] - 2026-09-04
 
 ### Changed
