@@ -13,7 +13,7 @@ import { TICKTICK_INVOCATIONS } from './wire.ts'
 
 /** Host Typert manifest (validated by `@deepseek-ai/dsh-typert-loader`). */
 export const TYPERT = Object.freeze({
-  package: 'dsh-ticktick',
+  package: '@perrylink/dsh-ticktick',
   face: 'host',
   schemas: Object.freeze([]),
   invocations: TICKTICK_INVOCATIONS,
