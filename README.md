@@ -17,7 +17,7 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 | Surface | Status |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.5-rc.1** (GitHub tag). npm dependency line: `@deepseek-ai/dsh` **0.1.5-rc.1** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verified 2026-09-10 against the dsh-v0.1.5-rc.1 master checkout (full gate chain + profile install smoke). |
+| Harness | DeepSeek Harness **dsh-v0.1.5-rc.2** (GitHub tag). npm dependency line: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verified 2026-09-11 against the dsh-v0.1.5-rc.2 master checkout (full gate chain + profile install smoke). |
 
 ## Features
 

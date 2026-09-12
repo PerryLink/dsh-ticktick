@@ -17,7 +17,7 @@ Ponte de tarefas do TickTick / Dida365 (滴答清单) para o [DeepSeek Harness](
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.5-rc.1** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.1.5-rc.1** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verificado em 2026-09-10 contra o checkout master dsh-v0.1.5-rc.1 (cadeia completa de gates + smoke de instalação de perfil). |
+| Harness | DeepSeek Harness **dsh-v0.1.5-rc.2** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verificado em 2026-09-11 contra o checkout master dsh-v0.1.5-rc.2 (cadeia completa de gates + smoke de instalação de perfil). |
 
 ## Recursos
 
