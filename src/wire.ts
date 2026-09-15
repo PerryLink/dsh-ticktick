@@ -161,6 +161,11 @@ export interface TicktickSettings {
   protectedTaskIds: string[]
 }
 
+/** Strict wire codec: published `schema` face + checkout `create` face (spread-built, no excess-property flags). */
+function wireStrict<T>(typeSymbol: string, schema: T) {
+  return Object.freeze({ ...{ mode: 'strict' as const, typeSymbol, schema }, create: () => schema })
+}
+
 /** Parameter codec helper: one JSON-sourced string parameter. */
 function stringParam(name: string, typeSymbol: string, acceptsUndefined = false): InvocationDescriptor['parameters'][number] {
   return Object.freeze({
@@ -168,11 +173,7 @@ function stringParam(name: string, typeSymbol: string, acceptsUndefined = false)
     wire: name,
     source: 'json' as const,
     ...(acceptsUndefined ? { acceptsUndefined: true } : {}),
-    codec: Object.freeze({
-      mode: 'strict' as const,
-      typeSymbol,
-      schema: z.string(),
-    }),
+    codec: wireStrict(typeSymbol, z.string()),
   })
 }
 
@@ -183,21 +184,13 @@ function numberParam(name: string, typeSymbol: string, acceptsUndefined = false)
     wire: name,
     source: 'json' as const,
     ...(acceptsUndefined ? { acceptsUndefined: true } : {}),
-    codec: Object.freeze({
-      mode: 'strict' as const,
-      typeSymbol,
-      schema: z.number().int(),
-    }),
+    codec: wireStrict(typeSymbol, z.number().int()),
   })
 }
 
 /** Result codec helper. */
 function resultCodec(typeSymbol: string, schema: z.ZodType<unknown>): InvocationDescriptor['result'] {
-  return Object.freeze({
-    mode: 'strict' as const,
-    typeSymbol,
-    schema,
-  })
+  return wireStrict(typeSymbol, schema)
 }
 
 /** The `ticktick/status` invocation descriptor. */
@@ -358,11 +351,7 @@ export const TICKTICK_BATCH_ADD_DESCRIPTOR = Object.freeze({
     name: 'tasks',
     wire: 'tasks',
     source: 'json' as const,
-    codec: Object.freeze({
-      mode: 'strict' as const,
-      typeSymbol: 'dsh-ticktick/types#BatchAddTasks',
-      schema: z.array(BATCH_ADD_TASK_SCHEMA),
-    }),
+    codec: wireStrict('dsh-ticktick/types#BatchAddTasks', z.array(BATCH_ADD_TASK_SCHEMA)),
   } satisfies InvocationDescriptor['parameters'][number])]),
   result: resultCodec('dsh-ticktick/types#BatchAddResult', BATCH_ADD_RESULT_SCHEMA),
   sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
