@@ -2,7 +2,7 @@
  * `dsh-ticktick`, browser half: mounts the `ticktick` Remote contribution,
  * then registers the Session-header task panel action
  * (`conversation.session.header.actions`, id `ticktick`) and the plugin
- * settings card (`settings.plugin.item`, key `ticktick`). All data arrives
+ * settings card (`plugins.item`, id `ticktick`). All data arrives
  * through the `remote.ticktick` namespace and the bound `settingsScope`;
  * the panel holds no state beyond its popup, forms, and drag session.
  *
@@ -13,9 +13,9 @@ import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: the api-remotes client declares the 'remote' service on the
 // client Context (the shell graph owns the runtime value).
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
-// Type-only: pulls the 'settings.plugin.item' SlotMap declaration into this
+// Type-only: pulls the 'plugins.item' SlotMap declaration into this
 // program so the card registration typechecks against the real declaration.
-import type {} from '@deepseek-ai/dsh-client-ui-settings-plugins/client'
+import type {} from '@deepseek-ai/dsh-client-ui-plugin-manager/client'
 // Type-only: the header-actions SlotMap merge (conversation slot family).
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
 // Type-only: the settingsScope Context merge.
@@ -66,8 +66,10 @@ interface TicktickSlots {
     inject: () => { api: TicktickApi }
   }, component: unknown): () => void
   register(options: {
-    name: 'settings.plugin.item'
-    key: 'ticktick'
+    name: 'plugins.item'
+    id: 'ticktick'
+    order: number
+    label: () => string
     locale: string
     inject: () => TicktickSettingsCardInjected
   }, component: unknown): () => void
@@ -102,9 +104,11 @@ export async function apply(ctx: ClientContext): Promise<void> {
       }),
     }, TicktickAction))
 
-    slots.inject('settings.plugin.item', () => slots.register({
-      name: 'settings.plugin.item',
-      key: 'ticktick',
+    slots.inject('plugins.item', () => slots.register({
+      name: 'plugins.item',
+      id: 'ticktick',
+      order: 50,
+      label: () => 'TickTick',
       locale: NS,
       inject: (): TicktickSettingsCardInjected => ({
         scope: settingsScope,

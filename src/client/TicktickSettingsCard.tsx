@@ -1,9 +1,11 @@
 /**
- * The TickTick plugin settings card (`settings.plugin.item`, key
- * `ticktick`). The card owns its own staging form — the shipped card-form
- * helper is in-repo and cross-plugin value imports are rejected by the
- * bundle-purity gate, so this card renders its fields directly over the
- * bound `SettingsScope` and writes each field through `scope.set`.
+ * The TickTick plugin settings card (`plugins.item`, id `ticktick`). The
+ * Plugins page renders it in two views: `summary` (the one-liner under the
+ * card title) and `page` (the form with its own save control). The card owns
+ * its own staging form — the shipped card-form helper is in-repo and
+ * cross-plugin value imports are rejected by the bundle-purity gate, so this
+ * card renders its fields directly over the bound `SettingsScope` and writes
+ * each field through `scope.set`.
  *
  * @module dsh-ticktick/client/TicktickSettingsCard
  */
@@ -24,6 +26,12 @@ export interface TicktickSettingsCardInjected {
   t?: TicktickSettingsTranslator
 }
 
+/** Full card props: the injected face plus the Plugins page view. */
+export type TicktickSettingsCardProps = TicktickSettingsCardInjected & {
+  /** `summary` renders the one-liner; `page` renders the form. */
+  view: 'summary' | 'page'
+}
+
 /** Staged form values (strings only; the scope writes the typed values). */
 interface FormState {
   token: string
@@ -37,8 +45,8 @@ interface FormState {
  * protected ids, staged locally and written field-by-field on Save.
  * @param props - bound scope and optional translator.
  */
-export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React.ReactElement {
-  const { scope, probe } = props
+export function TicktickSettingsCard(props: TicktickSettingsCardProps): React.ReactElement {
+  const { scope, probe, view } = props
   const t: TicktickSettingsTranslator = props.t ?? (key => en[key])
   const [form, setForm] = useState<FormState>({ token: '', tokenFile: '', mcpUrl: '', protectedTaskIds: '' })
   const [saved, setSaved] = useState(false)
@@ -46,6 +54,12 @@ export function TicktickSettingsCard(props: TicktickSettingsCardInjected): React
   const [error, setError] = useState<string | null>(null)
   const [probeResult, setProbeResult] = useState<TicktickProbeResult | null>(null)
   const [probing, setProbing] = useState(false)
+
+  if (view === 'summary') {
+    const configured = (scope.getSnapshot().value?.token ?? '') !== ''
+    return h('span', { style: { fontSize: '12px', color: configured ? '#2e7d32' : '#888' } },
+      configured ? t('settingsSummaryConfigured') : t('settingsSummaryUnconfigured'))
+  }
 
   useEffect(() => scope.subscribe(() => {
     const value = scope.getSnapshot().value
