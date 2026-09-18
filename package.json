@@ -44,6 +44,7 @@
     "LICENSE"
   ],
   "dsh": {
+    "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
@@ -98,6 +99,49 @@
       }
     }
   },
+  "dshWorkshop": {
+    "schema": "omdsh-workshop-package/v1",
+    "type": "plugin",
+    "integration": {
+      "protocol": "harness-profile",
+      "artifact": "cordis.patch.yml"
+    },
+    "install": {
+      "mode": "transactional",
+      "adapter": "profile-bundle",
+      "failurePolicy": "generation-rollback",
+      "touchesCurrentBeforeActivation": false
+    },
+    "lifecycle": {
+      "activation": "restart-plugin",
+      "dispose": "supported"
+    },
+    "permissions": [
+      "browser:local-storage",
+      "settings:read",
+      "settings:write",
+      "network:https://mcp.dida365.com"
+    ],
+    "compatibility": {
+      "dshVersions": [
+        "0.1.2-rc.1",
+        "0.1.5-rc.2",
+        "0.1.6-alpha.2"
+      ]
+    },
+    "capability": {
+      "id": "ticktick-task-panel",
+      "kind": "ui",
+      "invocation": "open the ticktick panel from a session header",
+      "expected": "the task list renders and quick add/complete/delete operations reach the configured TickTick endpoint"
+    },
+    "evidence": {
+      "install": null,
+      "failureIsolation": null,
+      "hotReload": null,
+      "remove": null
+    }
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -112,7 +156,8 @@
     "widget"
   ],
   "engines": {
-    "node": "^22.19.0 || >=24.0.0"
+    "node": "^22.19.0 || >=24.0.0",
+    "dsh": ">=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0"
   },
   "packageManager": "pnpm@11.7.0",
   "peerDependencies": {
@@ -152,8 +197,8 @@
     "@deepseek-ai/dsh-client-locale": "0.1.5-rc.2",
     "@deepseek-ai/dsh-client-ui-conversation": "0.1.5-rc.2",
     "@deepseek-ai/dsh-client-ui-primitives": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-client-ui-plugin-manager": "0.1.6-alpha.2",
     "@deepseek-ai/dsh-client-ui-settings": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-client-ui-settings-plugins": "0.1.5-rc.2",
     "@deepseek-ai/dsh-client-ui-slots": "0.1.5-rc.2",
     "@deepseek-ai/dsh-settings": "0.1.5-rc.2",
     "@deepseek-ai/dsh-system-prompt": "0.1.5-rc.2",
