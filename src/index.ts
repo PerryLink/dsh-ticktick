@@ -125,13 +125,31 @@ export async function apply(ctx: Context, config: Config | undefined): Promise<v
 
   // The service has no injects beyond its own registration; capture the
   // mounted instance for the tools and the settings change hook.
-  // Service Provider — registration: mount the ticktick Remote service and register the eleven tools.
-  await ctx.plugin(TicktickService, serviceConfig)
-  service = ctx.get('ticktick') as TicktickService
-
-  for (const tool of buildTicktickTools(service)) {
-    ctx.effect(() => ctx.tools.register(tool), `dsh-ticktick: ${tool.name} tool`)
-  }
+  // Service Provider — registration: mount the ticktick Remote service and
+  // register the eleven tools. One effect holds the mounted service (the
+  // resource) and every registration that depends on the async mount: an
+  // unload during the mount window flips `alive` so nothing registers on a
+  // disposed context, and the effect's disposer reverses the tools and the
+  // mounted service (A02 unified form — no bare top-level await before
+  // registrations).
+  ctx.effect(() => {
+    const fiber = ctx.plugin(TicktickService, serviceConfig)
+    let alive = true
+    const toolDisposers: (() => void)[] = []
+    void fiber.then(() => {
+      if (!alive) return
+      const mounted = ctx.get('ticktick') as TicktickService
+      service = mounted
+      for (const tool of buildTicktickTools(mounted)) {
+        toolDisposers.push(ctx.tools.register(tool))
+      }
+    })
+    return () => {
+      alive = false
+      for (const dispose of toolDisposers.reverse()) dispose()
+      void fiber.dispose()
+    }
+  }, 'dsh-ticktick: service mount and tools')
 
   // Consumer — announce the tool set through the systemPrompt section.
   ctx.effect(() => ctx.systemPrompt.section({
