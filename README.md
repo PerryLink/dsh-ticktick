@@ -25,7 +25,7 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 - **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views). A status dot shows the connection state; when no token is configured the panel offers one-step in-panel token setup.
 - **Eleven agent tools** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; Code Mode gets `await tools.ticktick_*(args)` for free.
-- **Settings card** — Settings → Plugins → TickTick: API token (secret), token file, MCP endpoint with CN/International presets, protected task ids, a Test-connection button, and a Clear-credentials button.
+- **Settings card** — Plugins page (Official group): API token (secret), token file, MCP endpoint with CN/International presets, protected task ids, a Test-connection button, and a Clear-credentials button.
 - **Live token re-read** — the Bearer token is re-read per request (card secret > token file, default `$DSH_HOME/.ticktick-token`); a 401 resets the client so a rotated token activates without restart.
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
 - **Protected ids** — mutating operations refuse tasks on the protected-id list before any wire call.
@@ -44,12 +44,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
 dsh plugin --profile web add link:/path/to/dsh-ticktick
 ```
 
-Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; the card appears under Settings → Plugins.
+Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; the card appears on the Plugins page (Official group).
 
 ## Configuration
 
 1. Get an API 口令 (a `dp_`-prefixed token) from the Dida365/TickTick web app: Profile → Settings → Account & Security → API 口令.
-2. Pick one of three token sources (priority order): the Settings → Plugins → TickTick card's secret field, the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
+2. Pick one of three token sources (priority order): the Plugins page TickTick card's secret field, the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
 3. Use the card's **Test connection** button to verify the token, and **Clear credentials** to wipe it.
 
 | Key | Default | Meaning |

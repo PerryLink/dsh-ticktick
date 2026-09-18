@@ -25,7 +25,7 @@
 
 - **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。常驻连接状态圆点；未配置令牌时面板内直接一步粘贴保存。
 - **11 个 agent 工具**：`ticktick_status`、`ticktick_lists`、`ticktick_tasks`、`ticktick_add`、`ticktick_complete`、`ticktick_delete`、`ticktick_due`、`ticktick_reorder`、`ticktick_completed`、`ticktick_search`、`ticktick_batch_add`；Code Mode 免费获得 `await tools.ticktick_*(args)`。
-- **设置卡片**：设置 → 插件 → TickTick：API 口令（secret）、令牌文件、端点预设（国内/国际版未实测/自定义）、受保护任务 id、一键**测试连接**与**清除凭据**。
+- **设置卡片**：插件页（官方组）→ TickTick：API 口令（secret）、令牌文件、端点预设（国内/国际版未实测/自定义）、受保护任务 id、一键**测试连接**与**清除凭据**。
 - **令牌热重读**：Bearer 令牌每次请求重读（卡片 secret 优先于令牌文件，默认 `$DSH_HOME/.ticktick-token`）；401 会重置客户端，轮换令牌无需重启。
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
 - **受保护任务**：变更操作在任何网络调用前拒绝受保护 id 列表中的任务。
@@ -44,12 +44,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
 dsh plugin --profile web add link:/path/to/dsh-ticktick
 ```
 
-重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；设置卡片出现在 设置 → 插件。
+重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；设置卡片出现在插件页（官方组）。
 
 ## 配置
 
 1. 在滴答网页版获取 API 口令（`dp_` 开头）：头像 → 设置 → 账户与安全 → API 口令。
-2. 三种令牌来源任选其一（优先级从高到低）：设置 → 插件 → TickTick 卡片的 secret 字段、`DIDA365_TOKEN` 环境变量、令牌文件（默认 `$DSH_HOME/.ticktick-token`，一行）。写文件即生效，无需任何配置变更。
+2. 三种令牌来源任选其一（优先级从高到低）：插件页的 TickTick 卡片的 secret 字段、`DIDA365_TOKEN` 环境变量、令牌文件（默认 `$DSH_HOME/.ticktick-token`，一行）。写文件即生效，无需任何配置变更。
 3. 用卡片上的**测试连接**按钮验证令牌，**清除凭据**按钮一键抹除。
 
 | 配置键 | 默认 | 含义 |

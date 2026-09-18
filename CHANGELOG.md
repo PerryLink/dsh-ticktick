@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file. The format is b
 ### Changed
 
 - Carry both Typert strict-codec faces on the wire descriptors: the published `schema` field (0.1.5-rc.2 line) and the `create` factory the 0.1.6-alpha.1 checkout materializes lazily on first use. Both typecheck rulers stay green.
+- Migrate the plugin settings card from the removed `settings.plugin.item` keyed slot to the `plugins.item` list slot (id `ticktick`, order 50, `view: 'summary' | 'page'` two-state) so the card shows on the Plugins page under Official instead of silently disappearing on 0.1.6-alpha.2.
+- Move the `dshWorkshop` intake manifest to the top level of `package.json` (alongside `dsh`); the nested `dsh.dshWorkshop` copy is deprecated and kept for one version cycle for older readers. Record `0.1.6-alpha.2` in the top-level `dshVersions` and add `dsh.manifestVersion: 1` + `engines.dsh` (three-clause canonical).
 
 ## [0.1.7] - 2026-09-12
 
@@ -69,7 +71,7 @@ All notable changes to this project are documented in this file. The format is b
 - `TicktickService` under the `ticktick` Typert Remote namespace: status, projects, tasks (aggregated with per-list warnings), add (with read-after-write verification), complete, remove, setDue (with the measured move-to-inbox detour for the server-side `update_task` crash), reorder (descending sortOrder semantics), completed (30-day window), search, batchAdd.
 - Eleven curated agent tools (`ticktick_status/lists/tasks/add/complete/delete/due/reorder/completed/search/batch_add`) plus a system-prompt usage section; Code Mode calls come free via `output.schema`.
 - Session-header task panel (`conversation.session.header.actions`): list filter, undone/completed views, full-text search, quick add, complete, delete with confirm, inline due dates with overdue/today/tomorrow chips, drag reorder (undone, single-list views).
-- Plugin settings card (`settings.plugin.item`, key `ticktick`): secret token, token file, MCP endpoint, protected task ids; live token re-read with 401-triggered client reset.
+- Plugin settings card (keyed settings slot, key `ticktick`; migrated to the `plugins.item` list slot in 0.1.8): secret token, token file, MCP endpoint, protected task ids; live token re-read with 401-triggered client reset.
 - Protected task ids refuse every mutating operation before any wire call.
 - Zero-dependency live-endpoint probes (`probes/`) for handshake, CRUD, due-date detour, reorder semantics, and query-tool contract discovery.
 - Setup UX: DIDA365_TOKEN env fallback, one-step in-panel token setup with a connection status badge, settings-card Test-connection / Clear-credentials buttons, and CN/International endpoint presets.

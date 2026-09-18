@@ -25,7 +25,7 @@ Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](ht
 
 - **Panel en la cabecera de sesión** — la acción `ticktick` de la cabecera abre una ventana emergente: filtrar por lista (Todas + cada lista), alternar vistas pendientes/completadas, búsqueda de texto completo, añadir tareas con fecha de vencimiento opcional, completar, borrar (con confirmación), fijar/limpiar fechas límite con etiquetas vencida/hoy/mañana y reordenar arrastrando (vistas pendientes de una sola lista). Un punto de estado muestra la conexión; sin token configurado, el panel ofrece la configuración del token en un solo paso.
 - **Once herramientas del agente** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; Code Mode obtiene `await tools.ticktick_*(args)` gratis.
-- **Tarjeta de configuración** — Ajustes → Plugins → TickTick: token API (secreto), archivo de token, endpoint MCP con ajustes CN/Internacional, ids de tareas protegidos, un botón Probar conexión y un botón Limpiar credenciales.
+- **Tarjeta de configuración** — página Plugins (grupo Official): token API (secreto), archivo de token, endpoint MCP con ajustes CN/Internacional, ids de tareas protegidos, un botón Probar conexión y un botón Limpiar credenciales.
 - **Relectura del token en vivo** — el token Bearer se relee en cada petición (secreto de la tarjeta > archivo, por defecto `$DSH_HOME/.ticktick-token`); un 401 reinicia el cliente para que un token rotado se active sin reiniciar.
 - **Contorneos medidos** — el MCP de TickTick rechaza `update_task` para tareas dentro de proyectos normales ("Expecting value: line 1 column 1"); el puente reintenta con mover-a-bandeja → actualizar → devolver. Las listas que fallan la validación del servidor (datos históricos `repeatFrom: ''`) se omiten y se notifican como advertencias, nunca se descartan en silencio.
 - **Ids protegidos** — las operaciones de mutación rechazan tareas de la lista protegida antes de cualquier llamada.
@@ -39,12 +39,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
 ```
 
-Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `ticktick` aparece en la cabecera de sesión; la tarjeta aparece en Ajustes → Plugins.
+Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `ticktick` aparece en la cabecera de sesión; la tarjeta aparece en la página Plugins (grupo Official).
 
 ## Configuración
 
 1. Consigue un API 口令 (un token con prefijo `dp_`) desde la web de Dida365/TickTick: Perfil → Ajustes → Cuenta y seguridad → API 口令.
-2. Elige una de las tres fuentes de token (orden de prioridad): el campo secreto de la tarjeta Ajustes → Plugins → TickTick, la variable de entorno `DIDA365_TOKEN`, o un archivo de token (por defecto `$DSH_HOME/.ticktick-token`, una línea). Escribir el archivo activa el puente sin ningún cambio de configuración.
+2. Elige una de las tres fuentes de token (orden de prioridad): el campo secreto de la tarjeta TickTick de la página Plugins, la variable de entorno `DIDA365_TOKEN`, o un archivo de token (por defecto `$DSH_HOME/.ticktick-token`, una línea). Escribir el archivo activa el puente sin ningún cambio de configuración.
 3. Usa el botón **Probar conexión** de la tarjeta para verificar el token y **Limpiar credenciales** para borrarlo.
 
 | Clave | Por defecto | Significado |
