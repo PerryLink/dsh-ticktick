@@ -24,6 +24,10 @@ Naming exception: the repo is `dsh-ticktick` but the npm package is scoped `@per
 - `protectedTaskIds` refuse every mutating operation before any wire call.
 - Nothing is claimed to work against the live endpoint unless a probe ran: the update crash detour, the epoch sentinel, and the descending sortOrder facts are encoded from the 0.1.0-era measurements and re-verified by `probes/` before release.
 
+## Decision log
+
+- **P1-1 (2026-09-19): this plugin keeps its own MCP client; it does NOT adopt `@deepseek-ai/dsh-mcp-client`.** The official package is a connection supervisor that registers `mcp__<server>__<tool>` tools and offers no transport-only exit, so switching to it would either replace the eleven curated `ticktick_*` tools (breaking the user-visible surface the card pins) or double-register them. Ruling: keep `src/mcp.ts` (with its measured workarounds) and carry "the harness has no transport-only MCP seam" as upstream-issue material for the standard-PR session.
+
 ## Config
 
 Schema in `src/config.ts` (Schemastery, fail-loud bounds, explicit `resolveConfig`): `tokenFile` (default ''), `mcpUrl` (default `https://mcp.dida365.com`), `toolCallTimeoutMs` (default 30000), `protectedTaskIds` (default []), `tools.*` pins (default '' = discover). `cordis.patch.yml` comments document the same keys; the settings card owns `token`/`tokenFile` live and `mcpUrl`/`protectedTaskIds` restart-applied; the five-language READMEs carry the user-facing table.
