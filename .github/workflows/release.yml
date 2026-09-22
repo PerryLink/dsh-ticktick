@@ -23,17 +23,13 @@ jobs:
       - run: pnpm test
       - run: pnpm run build
       - run: pnpm run verify:artifacts
-      # pnpm does not consume NODE_AUTH_TOKEN directly; write the auth
-      # token into the runner npmrc so the publish PUT is authenticated.
-      - name: Configure npm registry auth
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      # OIDC only. `id-token: write` above lets npm exchange a short-lived credential
+      # via trusted publishing. Writing `_authToken` into ~/.npmrc (or passing
+      # NODE_AUTH_TOKEN) makes npm take the token path instead; with that token now
+      # rejected the publish fails to authenticate WITHOUT ever attempting the
+      # exchange, which is what the v0.1.8/v0.1.9 runs showed: ENEEDAUTH and no
+      # /-/npm/v1/oidc/token/exchange request in the log.
       - run: pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
