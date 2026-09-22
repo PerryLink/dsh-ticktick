@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file. The format is b
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-09-22
+
 ### Changed
 
 - Adapt to DeepSeek Harness `dsh-v0.1.7-alpha.1`, whose settings contract replaced `installSection` wholesale. The plugin now declares its live fields as `Volatile<T>` Config references (`token`, `tokenFile`, `mcpUrl`, `protectedTaskIds` carry `.volatile()`), announces the page with `ctx.settings.configure({ auto: false }, ctx.fiber)`, and reads every live value through `.get()` at the moment of use — so a saved edit is committed into the running reference and applies without a restart. The token is still re-read per request, now from the Config reference instead of a settings-namespace source callback. **The four editable fields are the same four as before**: `toolCallTimeoutMs` and the tool-name pins stay plain, and Schemastery omits a plain field from the generated form, so promoting either one would have invented a new editable surface.
