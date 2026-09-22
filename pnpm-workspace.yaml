@@ -5,3 +5,29 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@deepseek-ai/*'
 verifyDepsBeforeRun: false
+# Pin the transitive @deepseek-ai/dsh-* graph to the line this build targets.
+#
+# Why this is required and not cosmetic: only DIRECT dependencies can be pinned in
+# package.json; every other dsh package arrives as a peer edge, and pnpm's
+# autoInstallPeers satisfies a peer with ANY version its range admits. The frozen
+# subgraph here still declares old preview ranges, so pnpm used to install
+# dsh-agent@0.1.2-rc.1 / dsh-invariants@0.1.2-rc.1 alongside the 0.1.7-alpha.1
+# packages. Those previews depend on schemastery ^3.18.2, so TWO schemastery copies
+# landed in node_modules and declaration emit failed on CI with
+#
+#   src/config.ts(94,14): error TS2742: The inferred type of 'Config' cannot be
+#   named without a reference to '.pnpm/@deepseek-ai+schemastery@3.18.2/...'
+#
+# (locally the 3.18.3 copy happened to be the one TS could name, which is why the
+# failure only reproduced under CI's --frozen-lockfile install).
+#
+# Plain package-name rows, not range-qualified ones: these are bare peer edges, and
+# a range-qualified row cannot match a bare edge, so the floor would silently not apply.
+overrides:
+  '@deepseek-ai/dsh-agent': 0.1.7-alpha.1
+  '@deepseek-ai/dsh-invariants': 0.1.7-alpha.1
+  '@deepseek-ai/dsh-scope': 0.1.7-alpha.1
+  '@deepseek-ai/dsh-user-approval': 0.1.7-alpha.1
+  '@deepseek-ai/schemastery': 3.18.3
+  '@deepseek-ai/cordis': 4.0.3
+  '@deepseek-ai/cosmokit': 1.8.4
