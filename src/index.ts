@@ -3,14 +3,15 @@
  *
  * Host half: mounts the `ticktick` Remote service (status plus the seven
  * task operations over the official TickTick MCP endpoint), registers the
- * eight curated `ticktick_*` tools on the shared service, installs the
- * `ticktick` settings namespace (token / token file / endpoint / protected
- * ids) that the browser settings card edits, and announces the tool set in
- * one system-prompt section.
+ * eight curated `ticktick_*` tools on the shared service, declares the
+ * `Volatile` Config fields (token / token file / endpoint / protected ids /
+ * tool-call deadline) that the browser half's configuration page edits on the
+ * Plugins page, and announces the tool set in one system-prompt section.
  *
- * The token is re-read per request: the settings card's secret field wins,
- * then the token file (`$DSH_HOME/.ticktick-token` by default). Writing the
- * file activates the bridge without a config change.
+ * The token is re-read per request: the configuration page's secret field
+ * wins, then the `DIDA365_TOKEN` environment variable, then the token file
+ * (`$DSH_HOME/.ticktick-token` by default). Writing the file activates the
+ * bridge without a config change.
  *
  * Function plugin — no default export (the Loader unwraps
  * `exports.default ?? exports`).
@@ -21,23 +22,23 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import type { Context } from '@deepseek-ai/cordis'
+import type { Context, Volatile } from '@deepseek-ai/cordis'
 import type {} from '@deepseek-ai/dsh-tools'
 import type {} from '@deepseek-ai/dsh-system-prompt'
 // Type-only: activates the `ctx.settings` Context merge.
 import type {} from '@deepseek-ai/dsh-settings'
-import z from '@deepseek-ai/schemastery'
-import { DEFAULT_MCP_URL, resolveConfig, type Config, type ResolvedConfig } from './config.ts'
+import { resolveConfig, type Config, type ResolvedConfig } from './config.ts'
 import { TicktickService, type TicktickServiceConfig } from './service.ts'
 import { buildTicktickTools } from './tools.ts'
-import { TICKTICK_SETTINGS_NS, type TicktickSettings } from './wire.ts'
+import { TICKTICK_SETTINGS_NS } from './wire.ts'
 
 export const name = 'ticktick'
 
 /** Hard services: the tool registry and the prompt assembly. `settings` is an optional child. */
 export const inject = ['tools', 'systemPrompt']
 
-export { Config, resolveConfig, DEFAULT_MCP_URL, DEFAULT_TOOL_CALL_TIMEOUT_MS } from './config.ts'
+export { Config, resolveConfig, DEFAULT_TOOL_CALL_TIMEOUT_MS } from './config.ts'
+export { DEFAULT_MCP_URL } from './config.ts'
 export { TicktickService } from './service.ts'
 export type { TicktickServiceConfig } from './service.ts'
 export { buildTicktickTools } from './tools.ts'
@@ -47,36 +48,40 @@ export { isInboxProject, normalizeProjects, normalizeTasks, resolveTools } from 
 export type { TicktickProject, TicktickTask, ToolResolver } from './domain.ts'
 export type * from './wire.ts'
 
-/** Settings namespace the browser card edits (paired by this exact key). */
+// Service Definition — public contract: the settings-form namespace and the exported service/tool faces.
+/** Profile entry id the browser half's configuration page is keyed by. */
 export const SETTINGS_NS = TICKTICK_SETTINGS_NS
-
-// Service Definition — public contract: the settings schema and the exported service/tool faces.
-/** Schemastery schema for the settings namespace (the card renders this). */
-export const TicktickSettingsSchema: z<TicktickSettings> = z.object({
-  token: z.string().role('secret').default(''),
-  tokenFile: z.string().default(''),
-  mcpUrl: z.string().default(DEFAULT_MCP_URL),
-  protectedTaskIds: z.array(z.string()).default([]),
-})
 
 /** Default token file: `<DSH_HOME>/.ticktick-token` (or `~/.dsh/.ticktick-token`). */
 function defaultTokenFile(): string {
   return join(process.env.DSH_HOME ?? join(homedir(), '.dsh'), '.ticktick-token')
 }
 
+/** Read one live Config field: the Loader hands a `Volatile<T>`, a programmatic caller the bare value. */
+function live<T>(value: Volatile<T> | T | undefined, fallback: T): T {
+  if (value === undefined || value === null) return fallback
+  const reference = value as { get?: () => T }
+  return typeof reference.get === 'function' ? reference.get() : value as T
+}
+
 /**
- * Resolve the current Bearer token: the settings card's secret wins, then
- * the DIDA365_TOKEN environment variable, then the configured token file.
- * @param settings - current settings layer.
- * @param resolved - loader config.
+ * Resolve the current Bearer token. Read at the moment of use — the token
+ * is re-read per request: the settings card's secret wins, then the
+ * `DIDA365_TOKEN` environment variable, then the configured token file (the
+ * live field, else the composition value, else `<DSH_HOME>/.ticktick-token`).
+ * Writing the file activates the bridge without a config change.
+ * @param config - the plugin Config as handed to `apply` (live fields are references).
+ * @param resolved - composition values captured at load.
  * @returns the token, or `null` when unconfigured.
  */
-export function resolveToken(settings: TicktickSettings, resolved: ResolvedConfig): string | null {
-  if (settings.token !== '') return settings.token
+export function resolveToken(config: Config | undefined, resolved: ResolvedConfig): string | null {
+  const settingsToken = live(config?.token, '')
+  if (settingsToken !== '') return settingsToken
   const env = process.env.DIDA365_TOKEN
   if (env !== undefined && env.trim() !== '') return env.trim()
-  const file = settings.tokenFile !== ''
-    ? settings.tokenFile
+  const liveTokenFile = live(config?.tokenFile, '')
+  const file = liveTokenFile !== ''
+    ? liveTokenFile
     : (resolved.tokenFile !== '' ? resolved.tokenFile : defaultTokenFile())
   if (!existsSync(file)) return null
   const token = readFileSync(file, 'utf8').trim()
@@ -84,39 +89,26 @@ export function resolveToken(settings: TicktickSettings, resolved: ResolvedConfi
 }
 
 /**
- * Mount the bridge: the settings namespace, the Remote service, the eight
+ * Mount the bridge: the configurable surface, the Remote service, the eleven
  * tools, and the usage announcement.
  *
  * @param ctx - context carrying tools + systemPrompt.
- * @param config - raw loader config; defaults applied through {@link resolveConfig}.
+ * @param config - live loader config; defaults applied through {@link resolveConfig}.
  */
 export async function apply(ctx: Context, config: Config | undefined): Promise<void> {
   const resolved = resolveConfig(config)
-  let settingsSource: () => TicktickSettings = () => ({
-    token: '',
-    tokenFile: resolved.tokenFile,
-    mcpUrl: resolved.mcpUrl,
-    protectedTaskIds: [...resolved.protectedTaskIds],
-  })
-  let service: TicktickService | undefined
 
+  // Let this plugin's Config appear as its own page on the Plugins page
+  // (the browser half registers into `plugins.row.config`). Required — a
+  // Config whose live fields are never presented is invisible to the user.
   ctx.inject(['settings'], (scope) => {
-    scope.settings.installSection(ctx, SETTINGS_NS, TicktickSettingsSchema, {
-      token: '',
-      tokenFile: resolved.tokenFile,
-      mcpUrl: resolved.mcpUrl,
-      protectedTaskIds: [...resolved.protectedTaskIds],
-    }, {
-      validate: (value) => {
-        if (value.mcpUrl.trim() === '') throw new Error('dsh-ticktick: mcpUrl must not be empty')
-      },
-      setSource: (source) => { settingsSource = source },
-      onChange: () => { service?.reset() },
-    })
+    scope.effect(() => scope.settings.configure({ auto: false }, ctx.fiber))
   })
 
   const serviceConfig: TicktickServiceConfig = {
-    getToken: () => resolveToken(settingsSource(), resolved),
+    // Lazy on purpose: the closure keeps the references, not a snapshot, so a
+    // settings-card edit is picked up by the next request without a remount.
+    getToken: () => resolveToken(config, resolved),
     mcpUrl: resolved.mcpUrl,
     toolCallTimeoutMs: resolved.toolCallTimeoutMs,
     protectedTaskIds: resolved.protectedTaskIds,
@@ -139,7 +131,6 @@ export async function apply(ctx: Context, config: Config | undefined): Promise<v
     void fiber.then(() => {
       if (!alive) return
       const mounted = ctx.get('ticktick') as TicktickService
-      service = mounted
       for (const tool of buildTicktickTools(mounted)) {
         toolDisposers.push(ctx.tools.register(tool))
       }
