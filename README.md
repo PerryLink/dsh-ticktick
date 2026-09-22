@@ -13,20 +13,20 @@
 
 **English** | [中文](README-zh.md) | [Español](README-es.md) | [Português](README-pt.md) | [हिन्दी](README-hi.md)
 
-TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a plugin settings card, and a typed Remote service — all over the official TickTick MCP endpoint.
+TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
 
 ## Compatibility
 
 | Surface | Status |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.5-rc.2** (GitHub tag). npm dependency line: `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verified 2026-09-11 against the dsh-v0.1.5-rc.2 master checkout (full gate chain + profile install smoke). |
+| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.1** (GitHub tag). npm dependency line: `@deepseek-ai/dsh` **0.1.7-alpha.1** (peers `>=0.1.7-alpha.1 <0.2.0`). Verified against the dsh-v0.1.7-alpha.1 checkout (full gate chain + profile install smoke). |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## Features
 
 - **Session-header panel** — the `ticktick` action in the Session header opens a popup: filter by list (All + every list), toggle undone/completed views, full-text search, add tasks with an optional due date, complete, delete (with confirm), set/clear due dates with overdue/today/tomorrow chips, and drag-reorder (undone, single-list views). A status dot shows the connection state; when no token is configured the panel offers one-step in-panel token setup.
 - **Eleven agent tools** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; Code Mode gets `await tools.ticktick_*(args)` for free.
-- **Settings card** — Plugins page (Official group): API token (secret), token file, MCP endpoint with CN/International presets, protected task ids, a Test-connection button, and a Clear-credentials button.
+- **Configuration page** — Plugins page → the TickTick row → **Configure**: API token (secret), token file, MCP endpoint with CN/International presets, protected task ids (all four applied live, no restart), a Test-connection button, and a Clear-credentials button.
 - **Live token re-read** — the Bearer token is re-read per request (card secret > token file, default `$DSH_HOME/.ticktick-token`); a 401 resets the client so a rotated token activates without restart.
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
 - **Protected ids** — mutating operations refuse tasks on the protected-id list before any wire call.
@@ -45,12 +45,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
 dsh plugin --profile web add link:/path/to/dsh-ticktick
 ```
 
-Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; the card appears on the Plugins page (Official group).
+Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; its configuration page opens from the **Configure** control on the TickTick row of the Plugins page.
 
 ## Configuration
 
 1. Get an API 口令 (a `dp_`-prefixed token) from the Dida365/TickTick web app: Profile → Settings → Account & Security → API 口令.
-2. Pick one of three token sources (priority order): the Plugins page TickTick card's secret field, the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
+2. Pick one of three token sources (priority order): the TickTick configuration page's secret field (Plugins page → the TickTick row → Configure), the `DIDA365_TOKEN` environment variable, or a token file (default `$DSH_HOME/.ticktick-token`, one line). Writing the file activates the bridge without any config change.
 3. Use the card's **Test connection** button to verify the token, and **Clear credentials** to wipe it.
 
 | Key | Default | Meaning |
@@ -81,7 +81,7 @@ Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action ap
 
 ```
 browser panel ── ctx.remote.ticktick.* ──▶ TicktickService (Typert Remote)
-settings card ── ctx.settingsScope ──────▶ settings namespace "ticktick"
+configuration page ── ctx.configForms ──▶ profile entry "ticktick" (Volatile Config)
 agent tools ─── ctx.tools (ticktick_*) ──▶ the same service
                     │
                     ▼
@@ -117,7 +117,7 @@ node probes/probe-queries.mjs        # P2 query-tool contract discovery
 dsh plugin --profile web remove @perrylink/dsh-ticktick
 ```
 
-Restart `dsh web`. All runtime registrations (tools, panel, settings card, prompt section) are removed with the plugin. The only static residue is the token in the user settings document — clear it first with the card's **Clear credentials** button (or remove the token file / `DIDA365_TOKEN` variable) to detach completely. To keep the package installed but inactive, disable the row instead:
+Restart `dsh web`. All runtime registrations (tools, panel, configuration page, prompt section) are removed with the plugin. The only static residue is the token in the user settings document — clear it first with the **Clear credentials** button on the TickTick configuration page (or remove the token file / `DIDA365_TOKEN` variable) to detach completely. To keep the package installed but inactive, disable the row instead:
 
 ```yaml
 - id: ticktick

@@ -13,20 +13,20 @@
 
 [English](README.md) | [简体中文](README-zh.md) | [Español](README-es.md) | **Português** | [हिन्दी](README-hi.md)
 
-Ponte de tarefas do TickTick / Dida365 (滴答清单) para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): um painel de tarefas no cabeçalho da sessão (filtro por lista, adição rápida, concluir, excluir, datas de vencimento, reordenar arrastando), onze ferramentas do agente, um cartão de configuração e um serviço Remote tipado — tudo sobre o endpoint MCP oficial do TickTick.
+Ponte de tarefas do TickTick / Dida365 (滴答清单) para o [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): um painel de tarefas no cabeçalho da sessão (filtro por lista, adição rápida, concluir, excluir, datas de vencimento, reordenar arrastando), onze ferramentas do agente, uma página de configuração na página Plugins e um serviço Remote tipado — tudo sobre o endpoint MCP oficial do TickTick.
 
 ## Compatibilidade
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.5-rc.2** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.1.5-rc.2** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). Verificado em 2026-09-11 contra o checkout master dsh-v0.1.5-rc.2 (cadeia completa de gates + smoke de instalação de perfil). |
+| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.1** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.1.7-alpha.1** (peers `>=0.1.7-alpha.1 <0.2.0`). Verificado contra o checkout dsh-v0.1.7-alpha.1 (cadeia completa de gates + smoke de instalação de perfil). |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## Recursos
 
 - **Painel no cabeçalho da sessão** — a ação `ticktick` do cabeçalho abre um pop-up: filtrar por lista (Todas + cada lista), alternar entre vistas pendentes/concluídas, busca de texto completo, adicionar tarefas com data de vencimento opcional, concluir, excluir (com confirmação), definir/limpar datas de vencimento com etiquetas vencida/hoje/amanhã e reordenar arrastando (vistas pendentes de uma única lista). Um ponto de status mostra a conexão; sem token configurado, o painel oferece a configuração do token em uma única etapa.
 - **Onze ferramentas do agente** — `ticktick_status`, `ticktick_lists`, `ticktick_tasks`, `ticktick_add`, `ticktick_complete`, `ticktick_delete`, `ticktick_due`, `ticktick_reorder`, `ticktick_completed`, `ticktick_search`, `ticktick_batch_add`; o Code Mode ganha `await tools.ticktick_*(args)` de graça.
-- **Cartão de configuração** — página Plugins (grupo Official): token da API (secreto), arquivo de token, endpoint MCP com predefinições CN/Internacional, ids de tarefas protegidos, um botão Testar conexão e um botão Limpar credenciais.
+- **Página de configuração** — página Plugins → a linha TickTick → **Configure**: token da API (secreto), arquivo de token, endpoint MCP com predefinições CN/Internacional, ids de tarefas protegidos (os quatro são aplicados ao vivo, sem reiniciar), um botão Testar conexão e um botão Limpar credenciais.
 - **Releitura do token ao vivo** — o token Bearer é relido a cada requisição (segredo do cartão > arquivo, padrão `$DSH_HOME/.ticktick-token`); um 401 reinicia o cliente para que um token rotacionado entre em vigor sem reiniciar.
 - **Contornos medidos** — o MCP do TickTick rejeita `update_task` para tarefas dentro de projetos comuns ("Expecting value: line 1 column 1"); a ponte tenta de novo com mover-para-a-caixa → atualizar → mover-de-volta. Listas que falham a validação do servidor (dados históricos `repeatFrom: ''`) são ignoradas e relatadas como avisos, nunca descartadas em silêncio.
 - **Ids protegidos** — operações de mutação recusam tarefas da lista protegida antes de qualquer chamada.
@@ -40,12 +40,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
 dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
 ```
 
-Reinicie o `dsh web` (plugins de bundle são ativados ao reiniciar). A ação `ticktick` aparece no cabeçalho da sessão; o cartão aparece na página Plugins (grupo Official).
+Reinicie o `dsh web` (plugins de bundle são ativados ao reiniciar). A ação `ticktick` aparece no cabeçalho da sessão; sua página de configuração abre pelo controle **Configure** da linha TickTick na página Plugins.
 
 ## Configuração
 
 1. Obtenha um API 口令 (um token com prefixo `dp_`) no site do Dida365/TickTick: Perfil → Ajustes → Conta e segurança → API 口令.
-2. Escolha uma das três fontes de token (ordem de prioridade): o campo secreto do cartão TickTick da página Plugins, a variável de ambiente `DIDA365_TOKEN`, ou um arquivo de token (padrão `$DSH_HOME/.ticktick-token`, uma linha). Escrever o arquivo ativa a ponte sem nenhuma mudança de configuração.
+2. Escolha uma das três fontes de token (ordem de prioridade): o campo secreto da página de configuração do TickTick (página Plugins → a linha TickTick → Configure), a variável de ambiente `DIDA365_TOKEN`, ou um arquivo de token (padrão `$DSH_HOME/.ticktick-token`, uma linha). Escrever o arquivo ativa a ponte sem nenhuma mudança de configuração.
 3. Use o botão **Testar conexão** do cartão para verificar o token e **Limpar credenciais** para apagá-lo.
 
 | Chave | Padrão | Significado |
@@ -76,7 +76,7 @@ Reinicie o `dsh web` (plugins de bundle são ativados ao reiniciar). A ação `t
 
 ```
 painel do navegador ── ctx.remote.ticktick.* ──▶ TicktickService (Typert Remote)
-cartão de ajustes ──── ctx.settingsScope ──────▶ namespace de ajustes "ticktick"
+página de configuração ── ctx.configForms ──▶ entrada de perfil "ticktick" (Config Volatile)
 ferramentas do agente ctx.tools (ticktick_*) ──▶ o mesmo serviço
                      │
                      ▼
@@ -112,7 +112,7 @@ node probes/probe-queries.mjs        # descoberta do contrato P2 de consultas
 dsh plugin --profile web remove @perrylink/dsh-ticktick
 ```
 
-Reinicie o `dsh web`. Todos os registros em tempo de execução (ferramentas, painel, cartão de ajustes, seção do prompt) são removidos com o plugin. O único resíduo estático é o token no documento de ajustes do usuário — limpe-o primeiro com o botão **Limpar credenciais** do cartão (ou remova o arquivo de token / a variável `DIDA365_TOKEN`) para desvincular por completo. Para manter o pacote instalado mas inativo, desative a linha em vez disso:
+Reinicie o `dsh web`. Todos os registros em tempo de execução (ferramentas, painel, página de configuração, seção do prompt) são removidos com o plugin. O único resíduo estático é o token no documento de ajustes do usuário — limpe-o primeiro com o botão **Limpar credenciais** da página de configuração do TickTick (ou remova o arquivo de token / a variável `DIDA365_TOKEN`) para desvincular por completo. Para manter o pacote instalado mas inativo, desative a linha em vez disso:
 
 ```yaml
 - id: ticktick

@@ -13,20 +13,20 @@
 
 [English](README.md) | **中文** | [Español](README-es.md) | [Português](README-pt.md) | [हिन्दी](README-hi.md)
 
-面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的滴答清单（TickTick / Dida365）任务桥：会话头部任务面板（清单筛选、快速添加、完成、删除、截止日期、拖拽排序）、11 个精选 agent 工具、插件设置卡片，以及类型化的 Remote 服务——全部走官方滴答 MCP 端点。
+面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的滴答清单（TickTick / Dida365）任务桥：会话头部任务面板（清单筛选、快速添加、完成、删除、截止日期、拖拽排序）、11 个精选 agent 工具、插件页上的配置页，以及类型化的 Remote 服务——全部走官方滴答 MCP 端点。
 
 ## 兼容性
 
 | 方面 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.5-rc.2**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.5-rc.2**（peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`）。已于 2026-09-11 对照 dsh-v0.1.5-rc.2 master checkout 核验（完整门禁链 + profile 安装冒烟）。 |
+| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.1**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.7-alpha.1**（peers `>=0.1.7-alpha.1 <0.2.0`）。已对照 dsh-v0.1.7-alpha.1 checkout 核验（完整门禁链 + profile 安装冒烟）。 |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## 功能
 
 - **会话头部面板**：会话头部的 `ticktick` 按钮打开弹窗——按清单筛选（全部 + 各清单）、未完成/已完成视图切换、全文搜索、带可选日期的快速添加、勾选完成、确认删除、设置/清除截止日期（过期/今天/明天高亮 chip）、单清单未完成视图内拖拽排序。常驻连接状态圆点；未配置令牌时面板内直接一步粘贴保存。
 - **11 个 agent 工具**：`ticktick_status`、`ticktick_lists`、`ticktick_tasks`、`ticktick_add`、`ticktick_complete`、`ticktick_delete`、`ticktick_due`、`ticktick_reorder`、`ticktick_completed`、`ticktick_search`、`ticktick_batch_add`；Code Mode 免费获得 `await tools.ticktick_*(args)`。
-- **设置卡片**：插件页（官方组）→ TickTick：API 口令（secret）、令牌文件、端点预设（国内/国际版未实测/自定义）、受保护任务 id、一键**测试连接**与**清除凭据**。
+- **配置页**：插件页 → TickTick 行 → **Configure**：API 口令（secret）、令牌文件、端点预设（国内/国际版未实测/自定义）、受保护任务 id（四项均即时生效，无需重启）、一键**测试连接**与**清除凭据**。
 - **令牌热重读**：Bearer 令牌每次请求重读（卡片 secret 优先于令牌文件，默认 `$DSH_HOME/.ticktick-token`）；401 会重置客户端，轮换令牌无需重启。
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
 - **受保护任务**：变更操作在任何网络调用前拒绝受保护 id 列表中的任务。
@@ -45,12 +45,12 @@ dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
 dsh plugin --profile web add link:/path/to/dsh-ticktick
 ```
 
-重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；设置卡片出现在插件页（官方组）。
+重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；其配置页从插件页 TickTick 行的 **Configure** 控件打开。
 
 ## 配置
 
 1. 在滴答网页版获取 API 口令（`dp_` 开头）：头像 → 设置 → 账户与安全 → API 口令。
-2. 三种令牌来源任选其一（优先级从高到低）：插件页的 TickTick 卡片的 secret 字段、`DIDA365_TOKEN` 环境变量、令牌文件（默认 `$DSH_HOME/.ticktick-token`，一行）。写文件即生效，无需任何配置变更。
+2. 三种令牌来源任选其一（优先级从高到低）：TickTick 配置页的 secret 字段（插件页 → TickTick 行 → Configure）、`DIDA365_TOKEN` 环境变量、令牌文件（默认 `$DSH_HOME/.ticktick-token`，一行）。写文件即生效，无需任何配置变更。
 3. 用卡片上的**测试连接**按钮验证令牌，**清除凭据**按钮一键抹除。
 
 | 配置键 | 默认 | 含义 |
@@ -81,7 +81,7 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 
 ```
 浏览器面板 ── ctx.remote.ticktick.* ──▶ TicktickService（Typert Remote）
-设置卡片 ──── ctx.settingsScope ──────▶ settings 命名空间 "ticktick"
+配置页 ─────── ctx.configForms ──────▶ profile 条目 "ticktick"（Volatile Config）
 agent 工具 ── ctx.tools（ticktick_*）──▶ 同一服务
                     │
                     ▼
@@ -117,7 +117,7 @@ node probes/probe-queries.mjs        # P2 查询工具契约探测
 dsh plugin --profile web remove @perrylink/dsh-ticktick
 ```
 
-重启 `dsh web`。工具、面板、设置卡、系统提示等全部运行态注册随插件卸载一并撤销。唯一静态残留是用户设置文档里的令牌——卸载前用卡片的**清除凭据**按钮抹掉（或删除令牌文件 / `DIDA365_TOKEN` 变量）即可彻底断开。想保留安装但暂时停用，改禁用该行：
+重启 `dsh web`。工具、面板、配置页、系统提示等全部运行态注册随插件卸载一并撤销。唯一静态残留是用户设置文档里的令牌——卸载前用 TickTick 配置页的**清除凭据**按钮抹掉（或删除令牌文件 / `DIDA365_TOKEN` 变量）即可彻底断开。想保留安装但暂时停用，改禁用该行：
 
 ```yaml
 - id: ticktick
