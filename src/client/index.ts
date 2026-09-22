@@ -1,10 +1,11 @@
 /**
  * `dsh-ticktick`, browser half: mounts the `ticktick` Remote contribution,
  * then registers the Session-header task panel action
- * (`conversation.session.header.actions`, id `ticktick`) and the plugin
- * settings card (`plugins.item`, id `ticktick`). All data arrives
- * through the `remote.ticktick` namespace and the bound `settingsScope`;
- * the panel holds no state beyond its popup, forms, and drag session.
+ * (`conversation.session.header.actions`, id `ticktick`) and this plugin's
+ * configuration page on the Plugins page (`plugins.row.config`, keyed
+ * `<package name>#<row id>`). All data arrives through the
+ * `remote.ticktick` namespace and the shared `ctx.configForms` form; the
+ * panel holds no state beyond its popup, forms, and drag session.
  *
  * @module dsh-ticktick/client
  */
@@ -13,14 +14,13 @@ import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: the api-remotes client declares the 'remote' service on the
 // client Context (the shell graph owns the runtime value).
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
-// Type-only: pulls the 'plugins.item' SlotMap declaration into this
-// program so the card registration typechecks against the real declaration.
+// Type-only: pulls the 'plugins.row.config' SlotMap declaration into this
+// program so the page registration typechecks against the real declaration.
 import type {} from '@deepseek-ai/dsh-client-ui-plugin-manager/client'
 // Type-only: the header-actions SlotMap merge (conversation slot family).
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-// Type-only: the settingsScope Context merge.
+// Type-only: the 'configForms' Context merge.
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
 // Type-only: the locale service Context merge (ctx.locale).
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import { createTicktickApi, type TicktickApi } from './api.ts'
@@ -29,26 +29,43 @@ import { TicktickSettingsCard, type TicktickSettingsCardInjected } from './Tickt
 import { en, zh, type TicktickLocaleKey } from './locales.ts'
 import { installPanelStyles } from './styles.ts'
 import { TICKTICK_REMOTE } from './remote.ts'
-import { TICKTICK_SETTINGS_NS, type TicktickSettings } from '../wire.ts'
+import type { TicktickForm } from './config-form.ts'
+import { TICKTICK_ROW_CONFIG_KEY, TICKTICK_SETTINGS_NS } from '../wire.ts'
 
 export type { TicktickApi } from './api.ts'
 export type { TicktickLocaleKey } from './locales.ts'
+export type { TicktickForm, TicktickFormSnapshot, TicktickPathOp, TicktickSecretView } from './config-form.ts'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
-    /** TickTick panel and settings-card copy. */
+    /** TickTick panel and configuration-page copy. */
     ticktick: TicktickLocaleKey
   }
 }
 
 /** Dictionary namespace owned by this plugin. */
-export const NS = 'ticktick'
+export const NS = TICKTICK_SETTINGS_NS
 
 /** Plugin name: matches the package name, the graph row `name`, and the bundle id. */
 export const name = '@perrylink/dsh-ticktick'
 
-/** Services the client reads; `remote.ticktick` appears once this plugin mounts its contribution. */
-export const inject = ['slots', 'locale', 'remote', 'settingsScope']
+/**
+ * Services the client reads; `remote.ticktick` appears once this plugin mounts
+ * its contribution. `configForms` is the settings domain's shared form
+ * provider — the per-namespace `ctx.settingsScope` service and the
+ * `SettingsScope` type it bound are gone on this harness line.
+ */
+export const inject = ['slots', 'locale', 'remote', 'configForms']
+
+/** The settings-form provider, structurally typed. */
+interface TicktickConfigForms {
+  /** @param entryId - the profile entry id whose values and writes are wanted. */
+  get<T>(entryId: string): TicktickForm & {
+    set(field: string, value: unknown): Promise<boolean>
+    unset(field: string): Promise<boolean>
+    getSnapshot(): { value: T | undefined, secrets?: readonly { path: string[], set: boolean }[] }
+  }
+}
 
 /**
  * Minimal structural contract of the client slots registry this client
@@ -63,13 +80,11 @@ interface TicktickSlots {
     id: 'ticktick'
     order: number
     locale: string
-    inject: () => { api: TicktickApi }
+    inject: () => { api: TicktickApi, setToken: (token: string) => Promise<void> }
   }, component: unknown): () => void
   register(options: {
-    name: 'plugins.item'
-    id: 'ticktick'
-    order: number
-    label: () => string
+    name: 'plugins.row.config'
+    key: string
     locale: string
     inject: () => TicktickSettingsCardInjected
   }, component: unknown): () => void
@@ -77,7 +92,7 @@ interface TicktickSlots {
 
 /**
  * Browser plugin body: dictionaries, the scoped stylesheet, the Remote
- * contribution mount, the header action, and the settings card.
+ * contribution mount, the header action, and the configuration page.
  *
  * @param ctx - client root context.
  */
@@ -91,7 +106,8 @@ export async function apply(ctx: ClientContext): Promise<void> {
 
   ctx.inject(['remote.ticktick'], (scope) => {
     const slots = scope.get('slots') as unknown as TicktickSlots
-    const settingsScope = scope.settingsScope.bind({ namespace: TICKTICK_SETTINGS_NS }) as unknown as SettingsScope<TicktickSettings>
+    // The profile entry id IS the form namespace: one form per Loader entry.
+    const form = (scope.get('configForms') as unknown as TicktickConfigForms).get(TICKTICK_SETTINGS_NS)
 
     slots.inject('conversation.session.header.actions', () => slots.register({
       name: 'conversation.session.header.actions',
@@ -100,18 +116,19 @@ export async function apply(ctx: ClientContext): Promise<void> {
       locale: NS,
       inject: (): { api: TicktickApi, setToken: (token: string) => Promise<void> } => ({
         api: createTicktickApi(scope),
-        setToken: async (token) => { await settingsScope.set('token', token.trim()) },
+        setToken: async (token) => { await form.set('token', token.trim()) },
       }),
     }, TicktickAction))
 
-    slots.inject('plugins.item', () => slots.register({
-      name: 'plugins.item',
-      id: 'ticktick',
-      order: 50,
-      label: () => 'TickTick',
+    // Only a row a `plugins.row.config` entry names gains a Configure
+    // control, so this registration is what puts the page on the Plugins page.
+    // The page owner supplies the entry's form as a render prop; the
+    // registration's inject face carries only what this plugin owns.
+    slots.inject('plugins.row.config', () => slots.register({
+      name: 'plugins.row.config',
+      key: TICKTICK_ROW_CONFIG_KEY,
       locale: NS,
       inject: (): TicktickSettingsCardInjected => ({
-        scope: settingsScope,
         probe: async () => {
           const result = await scope.remote.ticktick.probe()
           if (!result.ok) throw new Error(`ticktick.probe failed: ${result.error.code}: ${result.error.message}`)
