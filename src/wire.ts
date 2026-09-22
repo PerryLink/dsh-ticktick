@@ -1,7 +1,7 @@
 /**
  * The TickTick bridge's wire vocabulary: the result types served over the
  * `ticktick` Remote namespace, their zod v4 validation schema (the strict
- * codec both Typert faces carry), and the invocation descriptors shared
+ * codec both Typert faces carry) and the invocation descriptors shared
  * verbatim by the host `./typert` manifest (`src/typert.host.ts`) and the
  * client Remote contribution (`src/client/remote.ts`). One canonical source
  * for both faces keeps the host and client codecs from ever drifting apart.
@@ -121,7 +121,7 @@ export const BATCH_ADD_RESULT_SCHEMA = z.object({
   created: z.number().int(),
 })
 
-/** One-shot connectivity probe result (settings card test button). */
+/** One-shot connectivity probe result (Plugins page test button). */
 export interface TicktickProbeResult {
   ok: boolean
   toolCount: number
@@ -145,25 +145,32 @@ export const TICKTICK_OK_RESULT_SCHEMA = z.object({
   ok: z.boolean(),
 })
 
-/** Settings namespace the browser card edits (paired by this exact key, both faces). */
+/**
+ * Profile-entry id of this plugin's bundle row (`cordis.patch.yml`), which is
+ * also its settings-form namespace and the key the browser half registers its
+ * configuration page under (`<package name>#<row id>`).
+ */
 export const TICKTICK_SETTINGS_NS = 'ticktick'
 
-/**
- * Settings the card owns: token (secret) and token file are live; the
- * endpoint and protected ids apply on restart. Declared here (shared
- * vocabulary) so the client card types against it without importing the
- * Host module.
- */
-export interface TicktickSettings {
-  token: string
-  tokenFile: string
-  mcpUrl: string
-  protectedTaskIds: string[]
-}
+/** Package name: half of the `plugins.row.config` key, and the client bundle id. */
+export const TICKTICK_PACKAGE_NAME = '@perrylink/dsh-ticktick'
 
-/** Strict wire codec: published `schema` face + checkout `create` face (spread-built, no excess-property flags). */
+/**
+ * The `plugins.row.config` key this plugin's configuration page registers
+ * under: the bare package name plus the Loader entry id the bundle's patch
+ * declares. The Plugins page only gives a row a configure control while this
+ * exact key is registered.
+ */
+export const TICKTICK_ROW_CONFIG_KEY = `${TICKTICK_PACKAGE_NAME}#${TICKTICK_SETTINGS_NS}`
+
+/**
+ * Strict wire codec: the single `create()` factory face. TypertCodec's strict
+ * form materializes the process-realm schema on first boundary use; the
+ * 0.1.5-line `schema` field is gone, and a codec without `create` is refused
+ * at mount by the Typert Loader.
+ */
 function wireStrict<T>(typeSymbol: string, schema: T) {
-  return Object.freeze({ ...{ mode: 'strict' as const, typeSymbol, schema }, create: () => schema })
+  return Object.freeze({ mode: 'strict' as const, typeSymbol, create: () => schema })
 }
 
 /** Parameter codec helper: one JSON-sourced string parameter. */
