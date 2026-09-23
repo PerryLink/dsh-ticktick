@@ -82,7 +82,7 @@
       ],
       "compatibility": {
         "dshVersions": [
-          "0.1.7-alpha.1"
+          "0.1.7-alpha.2"
         ]
       },
       "capability": {
@@ -124,7 +124,7 @@
     ],
     "compatibility": {
       "dshVersions": [
-        "0.1.7-alpha.1"
+        "0.1.7-alpha.2"
       ]
     },
     "capability": {
@@ -191,17 +191,17 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.3",
-    "@deepseek-ai/dsh-api-remotes": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-locale": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-ui-conversation": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-ui-primitives": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-ui-plugin-manager": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-ui-settings": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-client-ui-slots": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-settings": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-system-prompt": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-tools": "0.1.7-alpha.1",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.7-alpha.1",
+    "@deepseek-ai/dsh-api-remotes": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-locale": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-ui-plugin-manager": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-settings": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-system-prompt": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-tools": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.7-alpha.2",
     "@deepseek-ai/cosmokit": "^1.8.4",
     "@deepseek-ai/schemastery": "^3.18.3",
     "@testing-library/react": "^16.3.0",

@@ -20,7 +20,7 @@
 
 | सतह | स्थिति |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.1** (GitHub tag)। npm डिपेंडेंसी लाइन: `@deepseek-ai/dsh` **0.1.7-alpha.1** (peers `>=0.1.7-alpha.1 <0.2.0`)। dsh-v0.1.7-alpha.1 checkout के विरुद्ध सत्यापित (पूर्ण gate chain + profile install smoke)। |
+| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.2** (GitHub tag)। npm डिपेंडेंसी लाइन: `@deepseek-ai/dsh` **0.1.7-alpha.2** (peers `>=0.1.7-alpha.1 <0.2.0`)। dsh-v0.1.7-alpha.2 checkout के विरुद्ध सत्यापित (पूर्ण gate chain + profile install smoke)। |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## विशेषताएँ
