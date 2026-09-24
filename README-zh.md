@@ -20,7 +20,7 @@
 
 | 方面 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.7-alpha.2**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.7-alpha.2**（peers `>=0.1.7-alpha.1 <0.2.0`）。已对照 dsh-v0.1.7-alpha.2 checkout 核验（完整门禁链 + profile 安装冒烟）。 |
+| Harness | DeepSeek Harness **dsh-v0.1.7-rc.1**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.7-rc.1**（peers `>=0.1.7-alpha.1 <0.2.0`）。已对照 dsh-v0.1.7-rc.1 checkout 核验（完整门禁链 + profile 安装冒烟）。 |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## 功能

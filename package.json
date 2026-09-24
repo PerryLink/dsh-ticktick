@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-ticktick",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "TickTick (Dida365) task bridge for DeepSeek Harness: a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder) over the official TickTick MCP endpoint, a Ticktick Remote service, curated agent tools, and a plugin settings card.",
   "repository": {
     "type": "git",
@@ -82,7 +82,7 @@
       ],
       "compatibility": {
         "dshVersions": [
-          "0.1.7-alpha.2"
+          "0.1.7-rc.1"
         ]
       },
       "capability": {
@@ -124,7 +124,8 @@
     ],
     "compatibility": {
       "dshVersions": [
-        "0.1.7-alpha.2"
+        "0.1.7-alpha.2",
+        "0.1.7-rc.1"
       ]
     },
     "capability": {
@@ -191,17 +192,17 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.3",
-    "@deepseek-ai/dsh-api-remotes": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-locale": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-ui-conversation": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-ui-primitives": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-ui-plugin-manager": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-ui-settings": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-client-ui-slots": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-settings": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-system-prompt": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-tools": "0.1.7-alpha.2",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.7-alpha.2",
+    "@deepseek-ai/dsh-api-remotes": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-locale": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-ui-conversation": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-ui-plugin-manager": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-settings": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-system-prompt": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-tools": "0.1.7-rc.1",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.7-rc.1",
     "@deepseek-ai/cosmokit": "^1.8.4",
     "@deepseek-ai/schemastery": "^3.18.3",
     "@testing-library/react": "^16.3.0",
