@@ -24,10 +24,10 @@ verifyDepsBeforeRun: false
 # Plain package-name rows, not range-qualified ones: these are bare peer edges, and
 # a range-qualified row cannot match a bare edge, so the floor would silently not apply.
 overrides:
-  '@deepseek-ai/dsh-agent': 0.1.7-rc.2
-  '@deepseek-ai/dsh-invariants': 0.1.7-rc.2
-  '@deepseek-ai/dsh-scope': 0.1.7-rc.2
-  '@deepseek-ai/dsh-user-approval': 0.1.7-rc.2
-  '@deepseek-ai/schemastery': 3.18.3
-  '@deepseek-ai/cordis': 4.0.3
-  '@deepseek-ai/cosmokit': 1.8.4
+  '@deepseek-ai/dsh-agent': 0.2.1-alpha.1
+  '@deepseek-ai/dsh-invariants': 0.2.0-rc.2
+  '@deepseek-ai/dsh-scope': 0.2.1-alpha.1
+  '@deepseek-ai/dsh-user-approval': 0.2.1-alpha.1
+  '@deepseek-ai/schemastery': 3.18.5-alpha.1
+  '@deepseek-ai/cordis': 4.0.5-alpha.1
+  '@deepseek-ai/cosmokit': 1.8.6-alpha.1
