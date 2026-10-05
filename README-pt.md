@@ -1,5 +1,7 @@
 # dsh-ticktick
 
+> Release stamp: `0.1.13` (2026-10-04).
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-brightgreen.svg)](#)
 [![DSH plugin](https://img.shields.io/badge/dsh--plugin-✅-green)](https://github.com/topics/dsh-plugin)
@@ -20,7 +22,7 @@ Ponte de tarefas do TickTick / Dida365 (滴答清单) para o [DeepSeek Harness](
 
 | Superfície | Status |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.7-rc.2** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.1.7-rc.2** (peers `>=0.1.7-alpha.1 <0.2.0`). Verificado contra o checkout dsh-v0.1.7-rc.2 (cadeia completa de gates + smoke de instalação de perfil). |
+| Harness | DeepSeek Harness **dsh-v0.2.1-alpha.1** (tag do GitHub). Linha npm fixada em `@deepseek-ai/dsh` **0.2.1-alpha.1** (peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0 || >=0.1.7-0 <0.2.0 || >=0.2.0-0 <0.3.0 || >=0.2.1-0 <0.3.0`). Verificado contra o checkout dsh-v0.2.1-alpha.1 (cadeia completa de gates + smoke de instalação de perfil). |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## Recursos

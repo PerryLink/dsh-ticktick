@@ -1,5 +1,7 @@
 # dsh-ticktick
 
+> Release stamp: `0.1.13` (2026-10-04).
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-brightgreen.svg)](#)
 [![DSH plugin](https://img.shields.io/badge/dsh--plugin-✅-green)](https://github.com/topics/dsh-plugin)
@@ -20,7 +22,7 @@
 
 | 方面 | 状态 |
 |---|---|
-| Harness | DeepSeek Harness **dsh-v0.1.7-rc.2**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.1.7-rc.2**（peers `>=0.1.7-alpha.1 <0.2.0`）。已对照 dsh-v0.1.7-rc.2 checkout 核验（完整门禁链 + profile 安装冒烟）。 |
+| Harness | DeepSeek Harness **dsh-v0.2.1-alpha.1**（GitHub tag）。npm 依赖线钉在 `@deepseek-ai/dsh` **0.2.1-alpha.1**（peers `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0 || >=0.1.6-0 <0.2.0 || >=0.1.7-0 <0.2.0 || >=0.2.0-0 <0.3.0 || >=0.2.1-0 <0.3.0`）。已对照 dsh-v0.2.1-alpha.1 checkout 核验（完整门禁链 + profile 安装冒烟）。 |
 | Node | `^22.19.0 \|\| >=24.0.0` |
 
 ## 功能
