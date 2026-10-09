@@ -18,6 +18,12 @@
 
 Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): un panel de tareas en la cabecera de sesión (filtro por lista, alta rápida, completar, borrar, fechas límite, reordenar arrastrando), once herramientas del agente, una página de configuración en la página Plugins y un servicio Remote tipado — todo sobre el endpoint MCP oficial de TickTick.
 
+## What is dsh-ticktick?
+
+Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): un panel de tareas en la cabecera de sesión (filtro por lista, alta rápida, completar, borrar, fechas límite, reordenar arrastrando), once herramientas del agente, una página de configuración en la página Plugins y un servicio Remote tipado — todo sobre el endpoint MCP oficial de TickTick.
+
+![Demostración de terminal de dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
+
 ## Compatibilidad
 
 | Superficie | Estado |
@@ -36,6 +42,10 @@ Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](ht
 - **Sincronización multidispositivo** — cada escritura va a la nube de TickTick, así que móvil, escritorio y web la ven; cada lectura trae el estado actual.
 
 ## Instalación
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
 
 ```sh
 dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (incluye lib/)

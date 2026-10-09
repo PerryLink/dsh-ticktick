@@ -18,6 +18,12 @@
 
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) के लिए TickTick / Dida365 (滴答清单) टास्क ब्रिज: सत्र-हेडर टास्क पैनल (सूची फ़िल्टर, त्वरित जोड़, पूर्ण करना, हटाना, नियत तिथियाँ, ड्रैग पुनःक्रम), ग्यारह एजेंट टूल, प्लगइन पृष्ठ पर एक कॉन्फ़िगरेशन पृष्ठ और एक टाइप्ड Remote सेवा — सब कुछ आधिकारिक TickTick MCP एंडपॉइंट के ऊपर।
 
+## What is dsh-ticktick?
+
+dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामिल) dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
+
+![dsh-ticktick का टर्मिनल डेमो: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
+
 ## संगतता
 
 | सतह | स्थिति |
@@ -36,6 +42,10 @@
 - **बहु-डिवाइस सिंक** — हर लेखन TickTick क्लाउड खाते पर जाता है, इसलिए फ़ोन/डेस्कटॉप/वेब ऐप उसे देखते हैं; हर पठन वर्तमान स्थिति लाता है।
 
 ## इंस्टॉल
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
 
 ```sh
 dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामिल)

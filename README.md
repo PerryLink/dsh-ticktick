@@ -19,6 +19,12 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
 [![dshfind](https://dshfind.com/api/badge/PerryLink/dsh-ticktick?metric=downloads)](https://dshfind.com/plugins/PerryLink/dsh-ticktick?ref=badge)
 
+## What is dsh-ticktick?
+
+TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
+
+![Terminal demo of dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
+
 ## Compatibility
 
 | Surface | Status |
@@ -37,6 +43,10 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 - **Multi-device sync** — every write lands on the TickTick cloud account, so the phone/desktop/web apps see it; every read fetches current state.
 
 ## Install
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
 
 ```sh
 # npm (published artifact includes lib/, no build permission needed)
