@@ -29,6 +29,11 @@ jobs:
       # rejected the publish fails to authenticate WITHOUT ever attempting the
       # exchange, which is what the v0.1.8/v0.1.9 runs showed: ENEEDAUTH and no
       # /-/npm/v1/oidc/token/exchange request in the log.
+      #
+      # Requests for that exchange need npm >= 11.5.1, and the npm bundled with Node 22
+      # is 10.x. That is why the ENEEDAUTH above showed no exchange request: the client
+      # could not make one. Upgrade npm first, as the sibling repos do.
+      - run: npm install -g npm@^11.5.1
       - run: npm publish --access public --provenance
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
