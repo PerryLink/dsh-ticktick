@@ -25,6 +25,10 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 ![Terminal demo of dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
 
+![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
+
+*The same run, animated.*
+
 ## Compatibility
 
 | Surface | Status |

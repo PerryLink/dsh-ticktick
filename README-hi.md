@@ -24,6 +24,10 @@ dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामि�
 
 ![dsh-ticktick का टर्मिनल डेमो: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
 
+![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
+
+*वही रन, एनिमेटेड।*
+
 ## संगतता
 
 | सतह | स्थिति |
