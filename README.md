@@ -4,6 +4,8 @@
 
 **English** | [中文](README-zh.md) | [Español](README-es.md) | [Português](README-pt.md) | [हिन्दी](README-hi.md)
 
+> **Package name.** This project publishes to npm as **`@perrylink/dsh-ticktick`**. The bare npm name `dsh-ticktick` belongs to a different, unrelated project — installing it does not install this plugin.
+
 TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
 
 
@@ -23,7 +25,7 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 
 TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
 
-![Terminal demo of dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
+![Terminal demo of dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-hero.png)
 
 ![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
 

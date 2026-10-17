@@ -1,5 +1,14 @@
-{
-  "screenshots": [
-    "docs/assets/dsh-ticktick-demo.png"
-  ]
-}
+[
+  {
+    "path": "docs/assets/dsh-ticktick-hero.png",
+    "kind": "hero",
+    "alt": "dsh-ticktick terminal output",
+    "caption": "Real dsh-ticktick test run; 51 tests passed."
+  },
+  {
+    "path": "docs/assets/dsh-ticktick-demo.gif",
+    "kind": "demo",
+    "alt": "Animated dsh-ticktick terminal session",
+    "caption": "The same run, assembled line by line."
+  }
+]
