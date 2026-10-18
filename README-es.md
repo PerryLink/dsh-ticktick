@@ -2,6 +2,8 @@
 
 > Release stamp: `0.1.13` (2026-10-04).
 
+> **Nombre del paquete.** Este proyecto se publica en npm como **`@perrylink/dsh-ticktick`**. El nombre simple `dsh-ticktick` pertenece a otro proyecto no relacionado: instalarlo no instala este plugin.
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-brightgreen.svg)](#)
 [![DSH plugin](https://img.shields.io/badge/dsh--plugin-✅-green)](https://github.com/topics/dsh-plugin)
@@ -22,7 +24,7 @@ Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](ht
 
 Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): un panel de tareas en la cabecera de sesión (filtro por lista, alta rápida, completar, borrar, fechas límite, reordenar arrastrando), once herramientas del agente, una página de configuración en la página Plugins y un servicio Remote tipado — todo sobre el endpoint MCP oficial de TickTick.
 
-![Demostración de terminal de dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.png)
+![Demostración de terminal de dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-hero.png)
 
 ![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
 
