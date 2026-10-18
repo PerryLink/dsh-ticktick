@@ -18,7 +18,31 @@
 
 [English](README.md) | **中文** | [Español](README-es.md) | [Português](README-pt.md) | [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-ticktick
+```
+
+
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的滴答清单（TickTick / Dida365）任务桥：会话头部任务面板（清单筛选、快速添加、完成、删除、截止日期、拖拽排序）、11 个精选 agent 工具、插件页上的配置页，以及类型化的 Remote 服务——全部走官方滴答 MCP 端点。
+
+## 安装
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
+
+```sh
+# npm（发布产物含 lib/，无需构建许可）
+dsh plugin --profile web add @perrylink/dsh-ticktick
+
+# git 源码（钉住 commit；pnpm 首次会请你放行 prepare 构建）
+dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
+
+# 本地开发
+dsh plugin --profile web add link:/path/to/dsh-ticktick
+```
+
+重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；其配置页从插件页 TickTick 行的 **Configure** 控件打开。
 
 ## What is dsh-ticktick?
 
@@ -46,25 +70,6 @@
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
 - **受保护任务**：变更操作在任何网络调用前拒绝受保护 id 列表中的任务。
 - **多端同步**：所有写入落在滴答云端账号，手机/电脑/网页版都能看到；每次读取都是当前状态。
-
-## 安装
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-ticktick
-```
-
-```sh
-# npm（发布产物含 lib/，无需构建许可）
-dsh plugin --profile web add @perrylink/dsh-ticktick
-
-# git 源码（钉住 commit；pnpm 首次会请你放行 prepare 构建）
-dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
-
-# 本地开发
-dsh plugin --profile web add link:/path/to/dsh-ticktick
-```
-
-重启 `dsh web`（bundle 插件重启生效）。`ticktick` 按钮出现在会话头部；其配置页从插件页 TickTick 行的 **Configure** 控件打开。
 
 ## 配置
 

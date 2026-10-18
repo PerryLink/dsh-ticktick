@@ -18,7 +18,26 @@
 
 [English](README.md) | [简体中文](README-zh.md) | **Español** | [Português](README-pt.md) | [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-ticktick
+```
+
+
 Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): un panel de tareas en la cabecera de sesión (filtro por lista, alta rápida, completar, borrar, fechas límite, reordenar arrastrando), once herramientas del agente, una página de configuración en la página Plugins y un servicio Remote tipado — todo sobre el endpoint MCP oficial de TickTick.
+
+## Instalación
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
+
+```sh
+dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (incluye lib/)
+dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
+dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
+```
+
+Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `ticktick` aparece en la cabecera de sesión; su página de configuración se abre desde el control **Configure** de la fila TickTick en la página Plugins.
 
 ## What is dsh-ticktick?
 
@@ -46,20 +65,6 @@ Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](ht
 - **Contorneos medidos** — el MCP de TickTick rechaza `update_task` para tareas dentro de proyectos normales ("Expecting value: line 1 column 1"); el puente reintenta con mover-a-bandeja → actualizar → devolver. Las listas que fallan la validación del servidor (datos históricos `repeatFrom: ''`) se omiten y se notifican como advertencias, nunca se descartan en silencio.
 - **Ids protegidos** — las operaciones de mutación rechazan tareas de la lista protegida antes de cualquier llamada.
 - **Sincronización multidispositivo** — cada escritura va a la nube de TickTick, así que móvil, escritorio y web la ven; cada lectura trae el estado actual.
-
-## Instalación
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-ticktick
-```
-
-```sh
-dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (incluye lib/)
-dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
-dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
-```
-
-Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `ticktick` aparece en la cabecera de sesión; su página de configuración se abre desde el control **Configure** de la fila TickTick en la página Plugins.
 
 ## Configuración
 

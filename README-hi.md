@@ -20,6 +20,20 @@
 
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) के लिए TickTick / Dida365 (滴答清单) टास्क ब्रिज: सत्र-हेडर टास्क पैनल (सूची फ़िल्टर, त्वरित जोड़, पूर्ण करना, हटाना, नियत तिथियाँ, ड्रैग पुनःक्रम), ग्यारह एजेंट टूल, प्लगइन पृष्ठ पर एक कॉन्फ़िगरेशन पृष्ठ और एक टाइप्ड Remote सेवा — सब कुछ आधिकारिक TickTick MCP एंडपॉइंट के ऊपर।
 
+## इंस्टॉल
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
+
+```sh
+dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामिल)
+dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
+dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
+```
+
+`dsh web` पुनः आरंभ करें (bundle प्लगइन पुनरारंभ पर सक्रिय होते हैं)। `ticktick` क्रिया सत्र हेडर में दिखती है; इसका कॉन्फ़िगरेशन पृष्ठ प्लगइन पृष्ठ की TickTick पंक्ति पर **Configure** नियंत्रण से खुलता है।
+
 ## What is dsh-ticktick?
 
 dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामिल) dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
@@ -46,20 +60,6 @@ dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामि�
 - **मापे गए कामकाज** — TickTick MCP सामान्य प्रोजेक्टों के कार्यों के लिए `update_task` अस्वीकार करता है ("Expecting value: line 1 column 1"); ब्रिज इनबॉक्स-में-ले-जाओ → अपडेट → वापस-ले-आओ के रास्ते से फिर कोशिश करता है। सर्वर-साइड सत्यापन में विफल सूचियाँ (ऐतिहासिक `repeatFrom: ''` डेटा) छोड़ दी जाती हैं और चेतावनी के रूप में सूचित होती हैं, चुपचाप कभी नहीं गिराई जातीं।
 - **संरक्षित ids** — उत्परिवर्तन क्रियाएँ किसी भी वायर कॉल से पहले संरक्षित-सूची के कार्यों को मना करती हैं।
 - **बहु-डिवाइस सिंक** — हर लेखन TickTick क्लाउड खाते पर जाता है, इसलिए फ़ोन/डेस्कटॉप/वेब ऐप उसे देखते हैं; हर पठन वर्तमान स्थिति लाता है।
-
-## इंस्टॉल
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-ticktick
-```
-
-```sh
-dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामिल)
-dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"   # git
-dsh plugin --profile web add link:/path/to/dsh-ticktick              # local
-```
-
-`dsh web` पुनः आरंभ करें (bundle प्लगइन पुनरारंभ पर सक्रिय होते हैं)। `ticktick` क्रिया सत्र हेडर में दिखती है; इसका कॉन्फ़िगरेशन पृष्ठ प्लगइन पृष्ठ की TickTick पंक्ति पर **Configure** नियंत्रण से खुलता है।
 
 ## कॉन्फ़िगरेशन
 

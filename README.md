@@ -21,6 +21,25 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 [![npm downloads](https://img.shields.io/npm/dm/%40perrylink%2Fdsh-ticktick)](https://www.npmjs.com/package/@perrylink/dsh-ticktick)
 [![dshfind](https://dshfind.com/api/badge/PerryLink/dsh-ticktick?metric=downloads)](https://dshfind.com/plugins/PerryLink/dsh-ticktick?ref=badge)
 
+## Install
+
+```sh
+dsh plugin --profile web add github:PerryLink/dsh-ticktick
+```
+
+```sh
+# npm (published artifact includes lib/, no build permission needed)
+dsh plugin --profile web add @perrylink/dsh-ticktick
+
+# git source (pin a commit; pnpm asks you to allow the prepare build once)
+dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
+
+# local development
+dsh plugin --profile web add link:/path/to/dsh-ticktick
+```
+
+Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; its configuration page opens from the **Configure** control on the TickTick row of the Plugins page.
+
 ## What is dsh-ticktick?
 
 TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
@@ -47,25 +66,6 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
 - **Protected ids** — mutating operations refuse tasks on the protected-id list before any wire call.
 - **Multi-device sync** — every write lands on the TickTick cloud account, so the phone/desktop/web apps see it; every read fetches current state.
-
-## Install
-
-```sh
-dsh plugin --profile web add github:PerryLink/dsh-ticktick
-```
-
-```sh
-# npm (published artifact includes lib/, no build permission needed)
-dsh plugin --profile web add @perrylink/dsh-ticktick
-
-# git source (pin a commit; pnpm asks you to allow the prepare build once)
-dsh plugin --profile web add "github:PerryLink/dsh-ticktick#<sha>"
-
-# local development
-dsh plugin --profile web add link:/path/to/dsh-ticktick
-```
-
-Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action appears in the Session header; its configuration page opens from the **Configure** control on the TickTick row of the Plugins page.
 
 ## Configuration
 
