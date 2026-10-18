@@ -1,5 +1,12 @@
 # dsh-ticktick
 
+[English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
+
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-ticktick
+```
+
+
 > Release stamp: `0.1.13` (2026-10-04).
 
 > **पैकेज नाम।** यह प्रोजेक्ट npm पर **`@perrylink/dsh-ticktick`** के रूप में प्रकाशित होता है। सादा नाम `dsh-ticktick` किसी असंबंधित प्रोजेक्ट का है — उसे इंस्टॉल करने से यह प्लगइन इंस्टॉल नहीं होता।
