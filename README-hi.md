@@ -258,6 +258,8 @@ dsh plugin --profile web remove @perrylink/dsh-ticktick
 
 </details>
 
-</details>## लाइसेंस
+</details>
+
+## लाइसेंस
 
 [Apache-2.0](LICENSE)
