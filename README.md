@@ -1,5 +1,10 @@
 # dsh-ticktick
 
+```sh
+dsh plugin --profile <name> add @perrylink/dsh-ticktick
+```
+
+
 > Release stamp: `0.1.13` (2026-10-04).
 
 **English** | [中文](README-zh.md) | [Español](README-es.md) | [Português](README-pt.md) | [हिन्दी](README-hi.md)
