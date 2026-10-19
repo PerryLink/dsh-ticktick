@@ -205,7 +205,7 @@
     "@deepseek-ai/dsh-system-prompt": "0.2.1-rc.2",
     "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
     "@deepseek-ai/dsh-typert-protocol": "0.2.1-rc.2",
-    "@deepseek-ai/cosmokit": "^1.8.4",
+    "@deepseek-ai/cosmokit": "^1.8.6-alpha.2",
     "@deepseek-ai/schemastery": "^3.18.5-alpha.1",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^22.19.0",
