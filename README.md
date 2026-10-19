@@ -99,6 +99,22 @@ Work (hex1)
 
 *Observed from `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
+#### Failure branch
+
+**Input**
+
+~~~text
+{"id":"t-guarded","projectId":"hex1"} (protectedTaskIds: ["t-guarded"])
+~~~
+
+**Output**
+
+~~~text
+Error: task t-guarded is protected
+~~~
+
+*Observed from `plugins/dsh-ticktick/src/service.ts:344-349; plugins/dsh-ticktick/tests/service.spec.ts:158-163`*
+
 #### Brief examples
 
 - `ticktick_tasks`

@@ -99,6 +99,22 @@ Work (hex1)
 
 *来源 `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
+#### 失败分支
+
+**输入**
+
+~~~text
+{"id":"t-guarded","projectId":"hex1"} (protectedTaskIds: ["t-guarded"])
+~~~
+
+**输出**
+
+~~~text
+Error: task t-guarded is protected
+~~~
+
+*来源 `plugins/dsh-ticktick/src/service.ts:344-349; plugins/dsh-ticktick/tests/service.spec.ts:158-163`*
+
 #### 简短示例
 
 - `ticktick_tasks`

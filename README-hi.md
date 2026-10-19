@@ -96,6 +96,22 @@ Work (hex1)
 
 *स्रोत `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
+#### विफलता शाखा
+
+**इनपुट**
+
+~~~text
+{"id":"t-guarded","projectId":"hex1"} (protectedTaskIds: ["t-guarded"])
+~~~
+
+**आउटपुट**
+
+~~~text
+Error: task t-guarded is protected
+~~~
+
+*स्रोत `plugins/dsh-ticktick/src/service.ts:344-349; plugins/dsh-ticktick/tests/service.spec.ts:158-163`*
+
 #### संक्षिप्त उदाहरण
 
 - `ticktick_tasks`
