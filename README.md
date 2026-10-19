@@ -49,11 +49,11 @@ Restart `dsh web` (bundle plugins activate on restart). The `ticktick` action ap
 
 TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder), eleven curated agent tools, a configuration page on the Plugins page, and a typed Remote service — all over the official TickTick MCP endpoint.
 
-![Terminal demo of dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-hero.png)
+![Workflow diagram for dsh-ticktick: install → open panel → act.](docs/assets/dsh-ticktick-flow.svg)
 
-![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
+*Workflow overview: install → open panel → act. The examples below use the real command surface.*
 
-*The same run, animated.*
+
 
 ## Compatibility
 
@@ -71,6 +71,19 @@ TickTick / Dida365 (滴答清单) task bridge for [DeepSeek Harness](https://git
 - **Measured workarounds** — the TickTick MCP server rejects `update_task` for tasks inside regular projects ("Expecting value: line 1 column 1"); the bridge retries via a move-to-inbox → update → move-back detour. Lists that fail server-side validation (historical `repeatFrom: ''` data) are skipped and reported as warnings, never silently dropped.
 - **Protected ids** — mutating operations refuse tasks on the protected-id list before any wire call.
 - **Multi-device sync** — every write lands on the TickTick cloud account, so the phone/desktop/web apps see it; every read fetches current state.
+
+### Examples
+
+These are the plugin's real entry points; install once, then call one.
+
+#### Detailed example
+
+- `ticktick_lists`
+
+#### Brief examples
+
+- `ticktick_tasks`
+- `ticktick_add`
 
 ## Configuration
 

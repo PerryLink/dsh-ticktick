@@ -43,9 +43,10 @@ Reinicia `dsh web` (los plugins de bundle se activan al reiniciar). La acción `
 
 Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness): un panel de tareas en la cabecera de sesión (filtro por lista, alta rápida, completar, borrar, fechas límite, reordenar arrastrando), once herramientas del agente, una página de configuración en la página Plugins y un servicio Remote tipado — todo sobre el endpoint MCP oficial de TickTick.
 
-![Demostración de terminal de dsh-ticktick: dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-hero.png)
+![Diagrama de flujo de dsh-ticktick: instalar → abrir panel → actuar.](docs/assets/dsh-ticktick-flow.svg)
 
-![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
+*Resumen del flujo: instalar → abrir panel → actuar. Los ejemplos siguientes usan la superficie de comandos real.*
+
 
 *La misma ejecución, animada.*
 
@@ -65,6 +66,19 @@ Puente de tareas de TickTick / Dida365 (滴答清单) para [DeepSeek Harness](ht
 - **Contorneos medidos** — el MCP de TickTick rechaza `update_task` para tareas dentro de proyectos normales ("Expecting value: line 1 column 1"); el puente reintenta con mover-a-bandeja → actualizar → devolver. Las listas que fallan la validación del servidor (datos históricos `repeatFrom: ''`) se omiten y se notifican como advertencias, nunca se descartan en silencio.
 - **Ids protegidos** — las operaciones de mutación rechazan tareas de la lista protegida antes de cualquier llamada.
 - **Sincronización multidispositivo** — cada escritura va a la nube de TickTick, así que móvil, escritorio y web la ven; cada lectura trae el estado actual.
+
+### Ejemplos
+
+Son los puntos de entrada reales; instala y llama a uno.
+
+#### Ejemplo detallado
+
+- `ticktick_lists`
+
+#### Ejemplos breves
+
+- `ticktick_tasks`
+- `ticktick_add`
 
 ## Configuración
 

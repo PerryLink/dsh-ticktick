@@ -48,9 +48,10 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 
 面向 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的滴答清单（TickTick / Dida365）任务桥：会话头部任务面板（清单筛选、快速添加、完成、删除、截止日期、拖拽排序）、11 个精选 agent 工具、插件页上的配置页，以及类型化的 Remote 服务——全部走官方滴答 MCP 端点。
 
-![dsh-ticktick 终端演示：dsh-ticktick — install, then verify against the live endpoint](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-hero.png)
+![dsh-ticktick 工作流图：安装 → 打开面板 → 操作。](docs/assets/dsh-ticktick-flow.svg)
 
-![Animated terminal demo of dsh-ticktick](https://raw.githubusercontent.com/PerryLink/dsh-ticktick/main/docs/assets/dsh-ticktick-demo.gif)
+*工作流概览：安装 → 打开面板 → 操作。下面的示例使用实际命令面。*
+
 
 *同一次运行，动图版。*
 
@@ -70,6 +71,19 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 - **实测绕行**：滴答 MCP 对真实项目内任务调用 `update_task` 会服务端崩溃（"Expecting value: line 1 column 1"）——桥自动走「移到收件箱 → 更新 → 移回」绕行；服务端校验失败的清单（历史 `repeatFrom: ''` 数据）跳过并以警告透传，绝不静默丢弃。
 - **受保护任务**：变更操作在任何网络调用前拒绝受保护 id 列表中的任务。
 - **多端同步**：所有写入落在滴答云端账号，手机/电脑/网页版都能看到；每次读取都是当前状态。
+
+### 示例
+
+以下为插件真实入口；安装后调用一个即可。
+
+#### 详细示例
+
+- `ticktick_lists`
+
+#### 简短示例
+
+- `ticktick_tasks`
+- `ticktick_add`
 
 ## 配置
 
