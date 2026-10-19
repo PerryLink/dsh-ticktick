@@ -75,7 +75,26 @@ dsh plugin --profile web add @perrylink/dsh-ticktick   # npm (lib/ शामि�
 
 #### विस्तृत उदाहरण
 
-- `ticktick_lists`
+**कमांड**
+
+~~~sh
+ticktick_lists
+~~~
+
+**इनपुट**
+
+~~~json
+{}
+~~~
+
+**आउटपुट**
+
+~~~text
+Inbox (inbox)
+Work (hex1)
+~~~
+
+*स्रोत `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
 #### संक्षिप्त उदाहरण
 

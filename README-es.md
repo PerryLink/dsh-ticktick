@@ -73,7 +73,26 @@ Son los puntos de entrada reales; instala y llama a uno.
 
 #### Ejemplo detallado
 
-- `ticktick_lists`
+**Comando**
+
+~~~sh
+ticktick_lists
+~~~
+
+**Entrada**
+
+~~~json
+{}
+~~~
+
+**Salida**
+
+~~~text
+Inbox (inbox)
+Work (hex1)
+~~~
+
+*Observado en `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
 #### Ejemplos breves
 
