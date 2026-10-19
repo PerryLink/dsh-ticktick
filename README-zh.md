@@ -78,7 +78,26 @@ dsh plugin --profile web add link:/path/to/dsh-ticktick
 
 #### 详细示例
 
-- `ticktick_lists`
+**命令**
+
+~~~sh
+ticktick_lists
+~~~
+
+**输入**
+
+~~~json
+{}
+~~~
+
+**输出**
+
+~~~text
+Inbox (inbox)
+Work (hex1)
+~~~
+
+*来源 `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
 #### 简短示例
 

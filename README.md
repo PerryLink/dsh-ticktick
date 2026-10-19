@@ -78,7 +78,26 @@ These are the plugin's real entry points; install once, then call one.
 
 #### Detailed example
 
-- `ticktick_lists`
+**Command**
+
+~~~sh
+ticktick_lists
+~~~
+
+**Input**
+
+~~~json
+{}
+~~~
+
+**Output**
+
+~~~text
+Inbox (inbox)
+Work (hex1)
+~~~
+
+*Observed from `plugins/dsh-ticktick/src/tools.ts:107-109 (renderer); fixture/assertion at plugins/dsh-ticktick/tests/service.spec.ts:40-46,103-108`*
 
 #### Brief examples
 
