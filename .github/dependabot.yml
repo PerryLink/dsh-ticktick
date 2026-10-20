@@ -5,6 +5,9 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Dependabot cannot install this alpha direct dependency; bump manually.
+      - dependency-name: "@deepseek-ai/cosmokit"
     groups:
       npm-minor-patch:
         patterns: ["*"]
