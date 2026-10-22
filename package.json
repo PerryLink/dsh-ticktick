@@ -1,6 +1,6 @@
 {
   "name": "@perrylink/dsh-ticktick",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "TickTick (Dida365) task bridge for DeepSeek Harness: a Session-header task panel (list filter, quick add, complete, delete, due dates, drag reorder) over the official TickTick MCP endpoint, a Ticktick Remote service, curated agent tools, and a plugin settings card.",
   "repository": {
     "type": "git",
@@ -82,8 +82,11 @@
       ],
       "compatibility": {
         "dshVersions": [
+          "0.1.7-alpha.2",
           "0.1.7-rc.1",
-          "0.1.7-rc.2"
+          "0.1.7-rc.2",
+          "0.2.1-alpha.1",
+          "0.2.1-rc.2"
         ]
       },
       "capability": {
