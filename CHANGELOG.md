@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.21] - 2026-10-22
+
+### Fixed
+
+- **The nested `dsh.dshWorkshop.compatibility` block now matches the canonical manifest (issue #3).** The copy under `dsh.dshWorkshop` still listed only `0.1.7-rc.1` / `0.1.7-rc.2`, so a consumer reading that path concluded `0.2.1-rc.2` was unsupported while the top-level `dshWorkshop.compatibility` accepted it. Both blocks now carry the same five-line `dshVersions` timeline. No runtime code change; the client-mount investigation continues in the issue.
+
 ## [0.1.20] - 2026-10-18
 
 ### Changed
