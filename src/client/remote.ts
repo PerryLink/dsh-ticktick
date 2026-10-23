@@ -42,7 +42,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     tasks: (projectId?: string) => Promise<RemoteResult<TicktickTasksResult>>
     add: (title: string, projectId?: string, dueDate?: string) => Promise<RemoteResult<TicktickAddResult>>
     complete: (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
-    remove: (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
+    removeTask: (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
     setDue: (id: string, projectId: string | undefined, dueDate?: string) => Promise<RemoteResult<TicktickOkResult>>
     reorder: (id: string, projectId: string | undefined, sortOrder: number) => Promise<RemoteResult<TicktickOkResult>>
     completed: (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>
@@ -56,7 +56,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     'ticktick/tasks': (projectId?: string) => Promise<RemoteResult<TicktickTasksResult>>
     'ticktick/add': (title: string, projectId?: string, dueDate?: string) => Promise<RemoteResult<TicktickAddResult>>
     'ticktick/complete': (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
-    'ticktick/remove': (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
+    'ticktick/removeTask': (id: string, projectId: string) => Promise<RemoteResult<TicktickOkResult>>
     'ticktick/setDue': (id: string, projectId: string | undefined, dueDate?: string) => Promise<RemoteResult<TicktickOkResult>>
     'ticktick/reorder': (id: string, projectId: string | undefined, sortOrder: number) => Promise<RemoteResult<TicktickOkResult>>
     'ticktick/completed': (projectId?: string, days?: number) => Promise<RemoteResult<TicktickTasksResult>>

@@ -271,12 +271,20 @@ export const TICKTICK_COMPLETE_DESCRIPTOR = Object.freeze({
   sourceLocation: Object.freeze({ file: 'src/wire.ts', line: 1, column: 1 }),
 } as const) satisfies InvocationDescriptor
 
-/** The `ticktick/remove` invocation descriptor. */
+/**
+ * The `ticktick/removeTask` invocation descriptor. The wire method is
+ * `removeTask`, not `remove`: `RemoteNamespaceService` owns a bookkeeping
+ * `remove(kind, method, token)` on its prototype, so a namespace method named
+ * `remove` is rejected by `assertMethodAvailable` before any fiber exists.
+ * The host keeps dispatching to `TicktickService.remove` through
+ * `implementation`, and the stable wire id remains `.../remove`.
+ */
 export const TICKTICK_REMOVE_DESCRIPTOR = Object.freeze({
   id: 'dsh-ticktick#ticktick/remove',
   service: 'ticktick',
   namespace: 'ticktick',
-  method: 'remove',
+  method: 'removeTask',
+  implementation: 'remove',
   invocation: Object.freeze({ kind: 'direct' }),
   parameters: Object.freeze([
     stringParam('id', 'dsh-ticktick/types#RemoveId'),

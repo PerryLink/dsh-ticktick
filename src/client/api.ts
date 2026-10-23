@@ -45,7 +45,7 @@ export function createTicktickApi(scope: Context): TicktickApi {
     tasks: async (projectId) => unwrap(await scope.remote.ticktick.tasks(projectId), 'tasks'),
     add: async (title, projectId, dueDate) => unwrap(await scope.remote.ticktick.add(title, projectId, dueDate), 'add'),
     complete: async (id, projectId) => { unwrap(await scope.remote.ticktick.complete(id, projectId), 'complete') },
-    remove: async (id, projectId) => { unwrap(await scope.remote.ticktick.remove(id, projectId), 'remove') },
+    remove: async (id, projectId) => { unwrap(await scope.remote.ticktick.removeTask(id, projectId), 'remove') },
     setDue: async (id, projectId, dueDate) => { unwrap(await scope.remote.ticktick.setDue(id, projectId, dueDate), 'setDue') },
     reorder: async (id, projectId, sortOrder) => { unwrap(await scope.remote.ticktick.reorder(id, projectId, sortOrder), 'reorder') },
     completed: async (projectId, days) => unwrap(await scope.remote.ticktick.completed(projectId, days), 'completed'),

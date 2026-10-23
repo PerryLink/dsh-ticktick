@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.22] - 2026-10-23
+
+### Fixed
+
+- **The client Remote namespace mounts on 0.2.1-rc.2 again (issue #3).** The wire method `ticktick/remove` collided with `RemoteNamespaceService.prototype.remove` (the gateway's bookkeeping disposer), so `assertMethodAvailable` rejected the contribution before any namespace fiber existed and the client entry never activated — the GUI crash dialog only ever showed `phase: running`. The endpoint is now `ticktick/removeTask`; `implementation: 'remove'` keeps host dispatch on `TicktickService.remove`, and the stable wire id `dsh-ticktick#ticktick/remove` is unchanged. The panel API still exposes `remove` to components. Added a regression test that rejects any wire method reserved by the namespace service.
+
 ## [0.1.21] - 2026-10-22
 
 ### Fixed
