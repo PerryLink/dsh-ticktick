@@ -98,7 +98,7 @@ export function resolveTools(tools: readonly McpTool[], pins: ToolPins): ToolRes
   }
 }
 
-const VALUE_KEY = /title|content|text|subject|name|desc/i
+const VALUE_KEY = /title|content|text|subject|desc/i
 const ID_KEY = /(^|_)(id|uuid)$|taskId|task_id/i
 const PROJECT_KEY = /projectId|project_id/i
 
@@ -137,7 +137,7 @@ function findTaskArrays(value: unknown, depth: number): unknown[][] {
   if (depth > 8 || value === null || typeof value !== 'object') return []
   if (Array.isArray(value)) {
     const elements = value.filter(item => item !== null && typeof item === 'object' && !Array.isArray(item))
-    if (elements.length > 0 && elements.every(item => {
+    if (elements.length > 0 && elements.some(item => {
       const record = item as Record<string, unknown>
       return Object.keys(record).some(key => VALUE_KEY.test(key))
     })) return [value as unknown[]]
@@ -148,6 +148,11 @@ function findTaskArrays(value: unknown, depth: number): unknown[][] {
 
 /** Read the task id, title, done flag, project, due date, and sort order from one task-like record. */
 function readTask(record: Record<string, unknown>): TicktickTask | null {
+  // TickTick sections/columns carry { id, name, projectId } and no task field.
+  // `name` is deliberately not a task title key, so they cannot masquerade as
+  // tasks in the aggregate list (issue #11).
+  const kind = record.kind ?? record.type
+  if (typeof kind === 'string' && /section|column|group/i.test(kind)) return null
   const keys = Object.keys(record)
   const titleKey = keys.find(key => VALUE_KEY.test(key) && typeof record[key] === 'string')
   const idKey = keys.find(key => ID_KEY.test(key))
