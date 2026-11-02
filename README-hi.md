@@ -1,3 +1,5 @@
+> **Moved:** this project is now **[dsh-dida](https://github.com/PerryLink/dsh-dida)**. This repository stays as a pointer/backup; new work happens in the new home. Old npm package `@perrylink/dsh-ticktick` is deprecated; install `dsh-dida`.
+
 # dsh-ticktick
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)

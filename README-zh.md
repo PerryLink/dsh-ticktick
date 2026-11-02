@@ -1,3 +1,5 @@
+> **已迁移：** 本项目现在位于 **[dsh-dida](https://github.com/PerryLink/dsh-dida)**。本仓库保留为索引/备份，新工作在新仓库进行。旧 npm 包 `@perrylink/dsh-ticktick` 已弃用，请安装 `dsh-dida`。
+
 # dsh-ticktick
 
 > Release stamp: `0.1.13` (2026-10-04).
