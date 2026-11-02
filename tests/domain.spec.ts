@@ -102,6 +102,28 @@ describe('normalizeTasks', () => {
     expect(tasks).toEqual([{ id: 't1', title: 'a', done: false }])
   })
 
+  it('ignores TickTick sections/columns in a mixed task array (issue #11)', () => {
+    const tasks = normalizeTasks({
+      structuredContent: {
+        tasks: [
+          { id: 's1', name: 'Section A1', projectId: 'p1' },
+          { id: 's2', name: 'Section A2', projectId: 'p1' },
+          { id: 't1', title: 'real task', status: 0, projectId: 'p1' },
+        ],
+      },
+    })
+    expect(tasks).toEqual([{ id: 't1', title: 'real task', done: false, projectId: 'p1' }])
+  })
+
+  it('ignores arrays made only of sections and honors explicit section kinds', () => {
+    expect(normalizeTasks({
+      content: [{ type: 'text', text: JSON.stringify([{ id: 's1', name: 'Only section' }]) }],
+    })).toEqual([])
+    expect(normalizeTasks({
+      structuredContent: [{ id: 's1', title: 'A column', kind: 'section' }],
+    })).toEqual([])
+  })
+
   it('marks done tasks from status 2 and drops id-less rows', () => {
     const tasks = normalizeTasks({
       structuredContent: [{ id: 'done', title: 'x', status: 2 }, { title: 'no id' }],

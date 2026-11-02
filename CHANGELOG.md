@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.23] - 2026-10-26
+
+### Fixed
+
+- **`ticktick_tasks` no longer reports TickTick sections/columns as tasks (issue #11).** The normalizer treated any `name` field as a task title, so each section in a board-view list became a row with `due no due date` and inflated the undone count. `name` is no longer a task-title key; arrays are accepted when at least one element is task-like (not only when every element is), and an explicit `kind`/`type` of `section`/`column`/`group` is rejected. Added mixed section+task and section-only regression tests.
+
 ## [0.1.22] - 2026-10-23
 
 ### Fixed
